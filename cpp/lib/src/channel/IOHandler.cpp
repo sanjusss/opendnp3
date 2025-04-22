@@ -48,7 +48,7 @@ void IOHandler::Shutdown()
     }
 }
 
-void IOHandler::OnReadComplete(const std::error_code& ec, size_t num)
+void IOHandler::OnReadComplete(const ASIO_ERROR& ec, size_t num)
 {
     if (ec)
     {
@@ -68,7 +68,7 @@ void IOHandler::OnReadComplete(const std::error_code& ec, size_t num)
     }
 }
 
-void IOHandler::OnWriteComplete(const std::error_code& ec, size_t num)
+void IOHandler::OnWriteComplete(const ASIO_ERROR& ec, size_t num)
 {
 
     if (ec)

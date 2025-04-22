@@ -36,7 +36,7 @@ SerialChannel::SerialChannel(const std::shared_ptr<exe4cpp::StrandExecutor>& exe
 {
 }
 
-bool SerialChannel::Open(const SerialSettings& settings, std::error_code& ec)
+bool SerialChannel::Open(const SerialSettings& settings, ASIO_ERROR& ec)
 {
     port.open(settings.deviceName, ec);
     if (ec)
@@ -64,21 +64,21 @@ bool SerialChannel::Open(const SerialSettings& settings, std::error_code& ec)
 
 void SerialChannel::BeginReadImpl(ser4cpp::wseq_t buffer)
 {
-    auto callback = [this](const std::error_code& ec, size_t num) { this->OnReadCallback(ec, num); };
+    auto callback = [this](const ASIO_ERROR& ec, size_t num) { this->OnReadCallback(ec, num); };
 
-    port.async_read_some(asio::buffer(buffer, buffer.length()), this->executor->wrap(callback));
+    port.async_read_some(ASIO::buffer(buffer, buffer.length()), this->executor->wrap(callback));
 }
 
 void SerialChannel::BeginWriteImpl(const ser4cpp::rseq_t& buffer)
 {
-    auto callback = [this](const std::error_code& ec, size_t num) { this->OnWriteCallback(ec, num); };
+    auto callback = [this](const ASIO_ERROR& ec, size_t num) { this->OnWriteCallback(ec, num); };
 
-    async_write(port, asio::buffer(buffer, buffer.length()), this->executor->wrap(callback));
+    async_write(port, ASIO::buffer(buffer, buffer.length()), this->executor->wrap(callback));
 }
 
 void SerialChannel::ShutdownImpl()
 {
-    std::error_code ec;
+    ASIO_ERROR ec;
 #ifdef USE_FLOCK
     /* Explicitly unlock serial device handler before exiting.*/
     flock(port.native_handle(), LOCK_UN);

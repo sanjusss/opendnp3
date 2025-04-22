@@ -35,7 +35,7 @@ class TCPClient final : public std::enable_shared_from_this<TCPClient>, private 
 
 public:
     typedef std::function<void(
-        const std::shared_ptr<exe4cpp::StrandExecutor>& executor, asio::ip::tcp::socket, const std::error_code& ec)>
+        const std::shared_ptr<exe4cpp::StrandExecutor>& executor, ASIO::ip::tcp::socket, const ASIO_ERROR& ec)>
         connect_callback_t;
 
     static std::shared_ptr<TCPClient> Create(const Logger& logger,
@@ -53,10 +53,10 @@ public:
 
 private:
     void HandleResolveResult(const connect_callback_t& callback,
-                             const asio::ip::tcp::resolver::iterator& endpoints,
-                             const std::error_code& ec);
+                             const ASIO::ip::tcp::resolver::iterator& endpoints,
+                             const ASIO_ERROR& ec);
 
-    bool PostConnectError(const connect_callback_t& callback, const std::error_code& ec);
+    bool PostConnectError(const connect_callback_t& callback, const ASIO_ERROR& ec);
 
     bool connecting = false;
     bool canceled = false;
@@ -64,9 +64,9 @@ private:
     LoggingConnectionCondition condition;
     const std::shared_ptr<exe4cpp::StrandExecutor> executor;
     const std::string adapter;
-    asio::ip::tcp::socket socket;
-    asio::ip::tcp::endpoint localEndpoint;
-    asio::ip::tcp::resolver resolver;
+    ASIO::ip::tcp::socket socket;
+    ASIO::ip::tcp::endpoint localEndpoint;
+    ASIO::ip::tcp::resolver resolver;
 };
 
 } // namespace opendnp3

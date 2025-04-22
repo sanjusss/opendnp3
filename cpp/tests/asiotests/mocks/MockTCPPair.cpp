@@ -22,7 +22,7 @@
 
 using namespace opendnp3;
 
-MockTCPPair::MockTCPPair(std::shared_ptr<MockIO> io, uint16_t port, std::error_code ec)
+MockTCPPair::MockTCPPair(std::shared_ptr<MockIO> io, uint16_t port, ASIO_ERROR ec)
     : log(),
       io(io),
       port(port),
@@ -45,7 +45,7 @@ MockTCPPair::~MockTCPPair()
 void MockTCPPair::Connect(size_t num)
 {
     auto callback = [handler = this->chandler](const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                                               asio::ip::tcp::socket socket, const std::error_code& ec) {
+                                               ASIO::ip::tcp::socket socket, const ASIO_ERROR& ec) {
         handler->OnConnect(executor, std::move(socket), ec);
     };
 

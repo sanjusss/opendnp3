@@ -20,7 +20,7 @@
 #ifndef OPENDNP3_ICHANNELCALLBACKS_H
 #define OPENDNP3_ICHANNELCALLBACKS_H
 
-#include <system_error>
+#include "AsioHeader.h"
 
 namespace opendnp3
 {
@@ -29,8 +29,8 @@ struct IChannelCallbacks
 {
     virtual ~IChannelCallbacks(){};
 
-    virtual void OnReadComplete(const std::error_code& ec, size_t num) = 0;
-    virtual void OnWriteComplete(const std::error_code& ec, size_t num) = 0;
+    virtual void OnReadComplete(const ASIO_ERROR& ec, size_t num) = 0;
+    virtual void OnWriteComplete(const ASIO_ERROR& ec, size_t num) = 0;
 };
 
 } // namespace opendnp3

@@ -46,7 +46,7 @@ DNP3ManagerImpl::DNP3ManagerImpl(uint32_t concurrencyHint,
                                  std::function<void(uint32_t)> onThreadStart,
                                  std::function<void(uint32_t)> onThreadExit)
     : logger(std::move(handler), ModuleId(), "manager", levels::ALL),
-      io(std::make_shared<asio::io_context>()),
+      io(std::make_shared<ASIO::io_context>()),
       threadpool(io, concurrencyHint, std::move(onThreadStart), std::move(onThreadExit)),
       resources(ResourceManager::Create())
 {
@@ -97,7 +97,7 @@ std::shared_ptr<IChannel> DNP3ManagerImpl::AddTCPServer(const std::string& id,
                                                         std::shared_ptr<IChannelListener> listener)
 {
     auto create = [&]() -> std::shared_ptr<IChannel> {
-        std::error_code ec;
+        ASIO_ERROR ec;
         auto clogger = this->logger.detach(id, levels);
         auto executor = exe4cpp::StrandExecutor::create(this->io);
         auto iohandler = TCPServerIOHandler::Create(clogger, mode, listener, executor, endpoint, ec);
@@ -205,7 +205,7 @@ std::shared_ptr<IChannel> DNP3ManagerImpl::AddTLSServer(const std::string& id,
 
 #ifdef OPENDNP3_USE_TLS
     auto create = [&]() -> std::shared_ptr<IChannel> {
-        std::error_code ec;
+        ASIO_ERROR ec;
         auto clogger = this->logger.detach(id, levels);
         auto executor = exe4cpp::StrandExecutor::create(this->io);
         auto iohandler = TLSServerIOHandler::Create(clogger, mode, listener, executor, endpoint, config, ec);
@@ -236,7 +236,7 @@ std::shared_ptr<IListener> DNP3ManagerImpl::CreateListener(std::string loggerid,
                                                            const std::shared_ptr<IListenCallbacks>& callbacks)
 {
     auto create = [&]() -> std::shared_ptr<IListener> {
-        std::error_code ec;
+        ASIO_ERROR ec;
         auto server
             = MasterTCPServer::Create(this->logger.detach(loggerid, levels), exe4cpp::StrandExecutor::create(this->io),
                                       endpoint, callbacks, this->resources, ec);
@@ -267,7 +267,7 @@ std::shared_ptr<IListener> DNP3ManagerImpl::CreateListener(std::string loggerid,
 #ifdef OPENDNP3_USE_TLS
 
     auto create = [&]() -> std::shared_ptr<IListener> {
-        std::error_code ec;
+        ASIO_ERROR ec;
         auto server
             = MasterTLSServer::Create(this->logger.detach(loggerid, levels), exe4cpp::StrandExecutor::create(this->io),
                                       endpoint, config, callbacks, this->resources, ec);

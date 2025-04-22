@@ -26,43 +26,43 @@
 
 namespace opendnp3
 {
-SSLContext::SSLContext(const Logger& logger, bool server, const TLSConfig& config, std::error_code& ec)
-    : value(server ? asio::ssl::context_base::sslv23_server : asio::ssl::context_base::sslv23_client), logger(logger)
+SSLContext::SSLContext(const Logger& logger, bool server, const TLSConfig& config, ASIO_ERROR& ec)
+    : value(server ? ASIO::ssl::context_base::sslv23_server : ASIO::ssl::context_base::sslv23_client), logger(logger)
 {
     this->ApplyConfig(config, server, ec);
 }
 
 int SSLContext::GetVerifyMode(bool server)
 {
-    return server ? (asio::ssl::verify_peer | asio::ssl::verify_fail_if_no_peer_cert) : asio::ssl::verify_peer;
+    return server ? (ASIO::ssl::verify_peer | ASIO::ssl::verify_fail_if_no_peer_cert) : ASIO::ssl::verify_peer;
 }
 
-std::error_code SSLContext::ApplyConfig(const TLSConfig& config, bool server, std::error_code& ec)
+ASIO_ERROR SSLContext::ApplyConfig(const TLSConfig& config, bool server, ASIO_ERROR& ec)
 {
     // turn off session caching completely
     SSL_CTX_set_session_cache_mode(value.native_handle(), SSL_SESS_CACHE_OFF);
 
-    auto OPTIONS = asio::ssl::context::default_workarounds | asio::ssl::context::no_sslv2 | asio::ssl::context::no_sslv3
+    auto OPTIONS = ASIO::ssl::context::default_workarounds | ASIO::ssl::context::no_sslv2 | ASIO::ssl::context::no_sslv3
         | SSL_OP_NO_TICKET;
 
     if (!config.allowTLSv10)
     {
-        OPTIONS |= asio::ssl::context::no_tlsv1;
+        OPTIONS |= ASIO::ssl::context::no_tlsv1;
     }
 
     if (!config.allowTLSv11)
     {
-        OPTIONS |= asio::ssl::context::no_tlsv1_1;
+        OPTIONS |= ASIO::ssl::context::no_tlsv1_1;
     }
 
     if (!config.allowTLSv12)
     {
-        OPTIONS |= asio::ssl::context::no_tlsv1_2;
+        OPTIONS |= ASIO::ssl::context::no_tlsv1_2;
     }
 
     if (!config.allowTLSv13)
     {
-        OPTIONS |= asio::ssl::context::no_tlsv1_3;
+        OPTIONS |= ASIO::ssl::context::no_tlsv1_3;
     }
 
     if (value.set_options(OPTIONS, ec))
@@ -76,7 +76,7 @@ std::error_code SSLContext::ApplyConfig(const TLSConfig& config, bool server, st
     {
         if (SSL_CTX_set_cipher_list(value.native_handle(), config.cipherList.c_str()) == 0)
         {
-            ec = asio::error_code();
+            ec = ASIO::error_code();
             FORMAT_LOG_BLOCK(logger, flags::ERR, "Error calling ssl::context::set_cipher_list(..): %s",
                              ec.message().c_str());
             return ec;
@@ -107,7 +107,7 @@ std::error_code SSLContext::ApplyConfig(const TLSConfig& config, bool server, st
         return ec;
     }
 
-    if (value.use_private_key_file(config.privateKeyFilePath, asio::ssl::context_base::file_format::pem, ec))
+    if (value.use_private_key_file(config.privateKeyFilePath, ASIO::ssl::context_base::file_format::pem, ec))
     {
         FORMAT_LOG_BLOCK(logger, flags::ERR, "Error calling ssl::context::use_private_key_file(..): %s",
                          ec.message().c_str());

@@ -25,8 +25,8 @@
 using namespace opendnp3;
 
 void MockTCPClientHandler::OnConnect(const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                                     asio::ip::tcp::socket socket,
-                                     const std::error_code& ec)
+                                     ASIO::ip::tcp::socket socket,
+                                     const ASIO_ERROR& ec)
 {
     if (ec)
     {

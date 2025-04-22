@@ -669,8 +669,6 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${all_sources})
 add_library(opendnp3 ${all_sources})
 target_compile_features(opendnp3 PUBLIC cxx_std_14)
 target_link_libraries(opendnp3 PRIVATE
-    $<BUILD_INTERFACE:ser4cpp>
-    $<BUILD_INTERFACE:exe4cpp>
     $<BUILD_INTERFACE:asio>
     $<$<BOOL:${DNP3_TLS}>:OpenSSL::SSL>
 )

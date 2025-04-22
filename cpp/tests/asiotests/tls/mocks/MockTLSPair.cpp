@@ -26,7 +26,7 @@ MockTLSPair::MockTLSPair(const std::shared_ptr<MockIO>& io,
                          uint16_t port,
                          const TLSConfig& client,
                          const TLSConfig& server,
-                         std::error_code ec)
+                         ASIO_ERROR ec)
     : log(),
       io(io),
       port(port),
@@ -50,8 +50,8 @@ MockTLSPair::~MockTLSPair()
 void MockTLSPair::Connect(size_t num)
 {
     auto callback = [handler = this->chandler](const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                                               const std::shared_ptr<asio::ssl::stream<asio::ip::tcp::socket>>& stream,
-                                               const std::error_code& ec) { handler->OnConnect(executor, stream, ec); };
+                                               const std::shared_ptr<ASIO::ssl::stream<ASIO::ip::tcp::socket>>& stream,
+                                               const ASIO_ERROR& ec) { handler->OnConnect(executor, stream, ec); };
 
     if (!this->client->BeginConnect(IPEndpoint::Localhost(this->port), callback))
     {

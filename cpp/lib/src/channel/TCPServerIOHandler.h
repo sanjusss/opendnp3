@@ -38,13 +38,13 @@ class TCPServerIOHandler final : public IOHandler
     class Server final : public TCPServer
     {
     public:
-        typedef std::function<void(const std::shared_ptr<exe4cpp::StrandExecutor>& executor, asio::ip::tcp::socket)>
+        typedef std::function<void(const std::shared_ptr<exe4cpp::StrandExecutor>& executor, ASIO::ip::tcp::socket)>
             callback_t;
 
         Server(const Logger& logger,
                const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
                const IPEndpoint& endpoint,
-               std::error_code& ec)
+               ASIO_ERROR& ec)
             : TCPServer(logger, executor, endpoint, ec)
         {
         }
@@ -62,7 +62,7 @@ class TCPServerIOHandler final : public IOHandler
 
         void AcceptConnection(uint64_t sessionid,
                               const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                              asio::ip::tcp::socket) final;
+                              ASIO::ip::tcp::socket) final;
     };
 
 public:
@@ -71,7 +71,7 @@ public:
                                                       const std::shared_ptr<IChannelListener>& listener,
                                                       const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
                                                       const IPEndpoint& endpoint,
-                                                      std::error_code& ec)
+                                                      ASIO_ERROR& ec)
     {
         return std::make_shared<TCPServerIOHandler>(logger, accept_mode, listener, executor, endpoint, ec);
     }
@@ -81,7 +81,7 @@ public:
                        const std::shared_ptr<IChannelListener>& listener,
                        std::shared_ptr<exe4cpp::StrandExecutor> executor,
                        IPEndpoint endpoint,
-                       std::error_code& ec);
+                       ASIO_ERROR& ec);
 
 protected:
     void ShutdownImpl() final;

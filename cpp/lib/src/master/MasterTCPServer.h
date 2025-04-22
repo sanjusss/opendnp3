@@ -43,14 +43,14 @@ public:
                     const IPEndpoint& endpoint,
                     std::shared_ptr<IListenCallbacks> callbacks,
                     std::shared_ptr<ResourceManager> manager,
-                    std::error_code& ec);
+                    ASIO_ERROR& ec);
 
     static std::shared_ptr<MasterTCPServer> Create(const Logger& logger,
                                                    const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
                                                    const IPEndpoint& endpoint,
                                                    const std::shared_ptr<IListenCallbacks>& callbacks,
                                                    const std::shared_ptr<ResourceManager>& manager,
-                                                   std::error_code& ec)
+                                                   ASIO_ERROR& ec)
     {
         auto server = std::make_shared<MasterTCPServer>(logger, executor, endpoint, callbacks, manager, ec);
 
@@ -74,7 +74,7 @@ private:
 
     virtual void AcceptConnection(uint64_t sessionid,
                                   const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                                  asio::ip::tcp::socket) override;
+                                  ASIO::ip::tcp::socket) override;
 };
 
 } // namespace opendnp3

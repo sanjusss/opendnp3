@@ -44,7 +44,7 @@ public:
     TCPServer(const Logger& logger,
               const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
               const IPEndpoint& endpoint,
-              std::error_code& ec);
+              ASIO_ERROR& ec);
 
     /// Implement IListener
     void Shutdown() override final;
@@ -56,7 +56,7 @@ protected:
 
     virtual void AcceptConnection(uint64_t sessionid,
                                   const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                                  asio::ip::tcp::socket)
+                                  ASIO::ip::tcp::socket)
         = 0;
 
     /// Start asynchronously accepting connections on the strand
@@ -66,12 +66,12 @@ protected:
     std::shared_ptr<exe4cpp::StrandExecutor> executor;
 
 private:
-    void Configure(const std::string& adapter, std::error_code& ec);
+    void Configure(const std::string& adapter, ASIO_ERROR& ec);
 
-    asio::ip::tcp::endpoint endpoint;
-    asio::ip::tcp::acceptor acceptor;
-    asio::ip::tcp::socket socket;
-    asio::ip::tcp::endpoint remote_endpoint;
+    ASIO::ip::tcp::endpoint endpoint;
+    ASIO::ip::tcp::acceptor acceptor;
+    ASIO::ip::tcp::socket socket;
+    ASIO::ip::tcp::endpoint remote_endpoint;
     bool isShutdown = false;
     uint64_t session_id = 0;
 };

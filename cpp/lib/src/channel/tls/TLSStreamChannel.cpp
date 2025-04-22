@@ -26,30 +26,30 @@ namespace opendnp3
 {
 
 TLSStreamChannel::TLSStreamChannel(const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                                   std::shared_ptr<asio::ssl::stream<asio::ip::tcp::socket>> stream)
+                                   std::shared_ptr<ASIO::ssl::stream<ASIO::ip::tcp::socket>> stream)
     : IAsyncChannel(executor), stream(std::move(stream))
 {
 }
 
 void TLSStreamChannel::BeginReadImpl(ser4cpp::wseq_t dest)
 {
-    auto callback = [this](const std::error_code& ec, size_t num) { this->OnReadCallback(ec, num); };
+    auto callback = [this](const ASIO_ERROR& ec, size_t num) { this->OnReadCallback(ec, num); };
 
-    stream->async_read_some(asio::buffer(dest, dest.length()), this->executor->wrap(callback));
+    stream->async_read_some(ASIO::buffer(dest, dest.length()), this->executor->wrap(callback));
 }
 
 void TLSStreamChannel::BeginWriteImpl(const ser4cpp::rseq_t& data)
 {
-    auto callback = [this](const std::error_code& ec, size_t num) { this->OnWriteCallback(ec, num); };
+    auto callback = [this](const ASIO_ERROR& ec, size_t num) { this->OnWriteCallback(ec, num); };
 
-    asio::async_write(*stream, asio::buffer(data, data.length()), this->executor->wrap(callback));
+    ASIO::async_write(*stream, ASIO::buffer(data, data.length()), this->executor->wrap(callback));
 }
 
 void TLSStreamChannel::ShutdownImpl()
 {
     // Don't bother with a TLS shutdown. Just shutdown the socket.
-    std::error_code ec;
-    stream->lowest_layer().shutdown(asio::socket_base::shutdown_both, ec);
+    ASIO_ERROR ec;
+    stream->lowest_layer().shutdown(ASIO::socket_base::shutdown_both, ec);
     stream->lowest_layer().close(ec);
 }
 

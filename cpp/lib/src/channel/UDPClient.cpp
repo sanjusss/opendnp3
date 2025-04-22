@@ -40,7 +40,7 @@ bool UDPClient::Cancel()
         return false;
     }
 
-    std::error_code ec;
+    ASIO_ERROR ec;
     socket.cancel(ec);
     resolver.cancel();
     this->canceled = true;
@@ -54,8 +54,8 @@ bool UDPClient::Open(const IPEndpoint& localEndpoint, const IPEndpoint& remoteEn
 
     this->connecting = true;
 
-    std::error_code ec;
-    SocketHelpers::BindToLocalAddress<asio::ip::udp>(localEndpoint.address, localEndpoint.port, this->socket, ec);
+    ASIO_ERROR ec;
+    SocketHelpers::BindToLocalAddress<ASIO::ip::udp>(localEndpoint.address, localEndpoint.port, this->socket, ec);
 
     if (ec)
     {
@@ -63,26 +63,26 @@ bool UDPClient::Open(const IPEndpoint& localEndpoint, const IPEndpoint& remoteEn
     }
 
     // Find remote address
-    const auto address = asio::ip::address::from_string(remoteEndpoint.address, ec);
+    const auto address = ASIO::ip::address::from_string(remoteEndpoint.address, ec);
     auto self = this->shared_from_this();
     if (ec)
     {
         // Try DNS resolution instead
-        auto cb = [self, callback](const std::error_code& ec, asio::ip::udp::resolver::iterator endpoints) {
+        auto cb = [self, callback](const ASIO_ERROR& ec, ASIO::ip::udp::resolver::iterator endpoints) {
             self->HandleResolveResult(callback, endpoints, ec);
         };
 
         std::stringstream portstr;
         portstr << remoteEndpoint.port;
 
-        resolver.async_resolve(asio::ip::udp::resolver::query(remoteEndpoint.address, portstr.str()),
+        resolver.async_resolve(ASIO::ip::udp::resolver::query(remoteEndpoint.address, portstr.str()),
                                executor->wrap(cb));
 
         return true;
     }
 
-    asio::ip::udp::endpoint asioRemoteEndpoint(address, remoteEndpoint.port);
-    auto cb = [self, callback](const std::error_code& ec) {
+    ASIO::ip::udp::endpoint asioRemoteEndpoint(address, remoteEndpoint.port);
+    auto cb = [self, callback](const ASIO_ERROR& ec) {
         self->connecting = false;
         if (!self->canceled)
         {
@@ -96,8 +96,8 @@ bool UDPClient::Open(const IPEndpoint& localEndpoint, const IPEndpoint& remoteEn
 }
 
 void UDPClient::HandleResolveResult(const connect_callback_t& callback,
-                                    const asio::ip::udp::resolver::iterator& endpoints,
-                                    const std::error_code& ec)
+                                    const ASIO::ip::udp::resolver::iterator& endpoints,
+                                    const ASIO_ERROR& ec)
 {
     if (ec)
     {
@@ -106,8 +106,8 @@ void UDPClient::HandleResolveResult(const connect_callback_t& callback,
     else
     {
         // attempt a connection to each endpoint in the iterator until we connect
-        auto cb = [self = shared_from_this(), callback](const std::error_code& ec,
-                                                        asio::ip::udp::resolver::iterator endpoints) {
+        auto cb = [self = shared_from_this(), callback](const ASIO_ERROR& ec,
+                                                        ASIO::ip::udp::resolver::iterator endpoints) {
             self->connecting = false;
             if (!self->canceled)
             {
@@ -115,11 +115,11 @@ void UDPClient::HandleResolveResult(const connect_callback_t& callback,
             }
         };
 
-        asio::async_connect(this->socket, endpoints, this->condition, this->executor->wrap(cb));
+        ASIO::async_connect(this->socket, endpoints, this->condition, this->executor->wrap(cb));
     }
 }
 
-bool UDPClient::PostConnectError(const connect_callback_t& callback, const std::error_code& ec)
+bool UDPClient::PostConnectError(const connect_callback_t& callback, const ASIO_ERROR& ec)
 {
     auto cb = [self = shared_from_this(), ec, callback]() {
         self->connecting = false;

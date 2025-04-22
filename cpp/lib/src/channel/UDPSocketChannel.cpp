@@ -28,14 +28,14 @@ namespace opendnp3
 {
 
 UDPSocketChannel::UDPSocketChannel(const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                                   const Logger& logger, asio::ip::udp::socket socket)
+                                   const Logger& logger, ASIO::ip::udp::socket socket)
     : IAsyncChannel(executor), logger(logger), socket(std::move(socket)), first_successful_read(false), num_first_read_retries(0)
 {
 }
 
 void UDPSocketChannel::BeginReadImpl(ser4cpp::wseq_t dest)
 {
-    auto callback = [this](const std::error_code& ec, size_t num) {
+    auto callback = [this](const ASIO_ERROR& ec, size_t num) {
         if(!this->first_successful_read && this->num_first_read_retries < MAX_FIRST_READ_RETRIES)
         {
             if(ec)
@@ -44,7 +44,7 @@ void UDPSocketChannel::BeginReadImpl(ser4cpp::wseq_t dest)
                 FORMAT_LOG_BLOCK(this->logger, flags::DBG, "UDP ignoring initial errors (%d of %d)", this->num_first_read_retries + 1, MAX_FIRST_READ_RETRIES);
 
                 // We ignore failed reads until we get a successful one
-                const auto no_ec = std::error_code{};
+                const auto no_ec = ASIO_ERROR{};
                 this->OnReadCallback(no_ec, num);
 
                 // Avoid infinite loop
@@ -61,20 +61,20 @@ void UDPSocketChannel::BeginReadImpl(ser4cpp::wseq_t dest)
         this->OnReadCallback(ec, num);
     };
 
-    socket.async_receive(asio::buffer(dest, dest.length()), this->executor->wrap(callback));
+    socket.async_receive(ASIO::buffer(dest, dest.length()), this->executor->wrap(callback));
 }
 
 void UDPSocketChannel::BeginWriteImpl(const ser4cpp::rseq_t& buffer)
 {
-    auto callback = [this](const std::error_code& ec, size_t num) { this->OnWriteCallback(ec, num); };
+    auto callback = [this](const ASIO_ERROR& ec, size_t num) { this->OnWriteCallback(ec, num); };
 
-    socket.async_send(asio::buffer(buffer, buffer.length()), this->executor->wrap(callback));
+    socket.async_send(ASIO::buffer(buffer, buffer.length()), this->executor->wrap(callback));
 }
 
 void UDPSocketChannel::ShutdownImpl()
 {
-    std::error_code ec;
-    socket.shutdown(asio::socket_base::shutdown_type::shutdown_both, ec);
+    ASIO_ERROR ec;
+    socket.shutdown(ASIO::socket_base::shutdown_type::shutdown_both, ec);
     socket.close(ec);
 }
 

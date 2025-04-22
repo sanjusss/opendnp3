@@ -29,22 +29,22 @@
 namespace opendnp3
 {
 /**
- * Create and fully configure an asio::ssl::context
+ * Create and fully configure an ASIO::ssl::context
  */
 class SSLContext : private Uncopyable
 {
 
 public:
-    SSLContext(const Logger& logger, bool server, const TLSConfig& config, std::error_code&);
+    SSLContext(const Logger& logger, bool server, const TLSConfig& config, ASIO_ERROR&);
 
-    asio::ssl::context value;
+    ASIO::ssl::context value;
 
 private:
     Logger logger;
 
     static int GetVerifyMode(bool server);
 
-    std::error_code ApplyConfig(const TLSConfig& config, bool server, std::error_code& ec);
+    ASIO_ERROR ApplyConfig(const TLSConfig& config, bool server, ASIO_ERROR& ec);
 };
 
 } // namespace opendnp3

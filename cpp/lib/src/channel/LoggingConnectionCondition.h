@@ -25,7 +25,7 @@
 #include "opendnp3/logging/LogLevels.h"
 #include "opendnp3/logging/Logger.h"
 
-#include <system_error>
+#include "AsioHeader.h"
 
 namespace opendnp3
 {
@@ -36,7 +36,7 @@ class LoggingConnectionCondition
 public:
     LoggingConnectionCondition(Logger logger) : logger(logger) {}
 
-    template<typename Iterator> Iterator operator()(const std::error_code& ec, Iterator next)
+    template<typename Iterator> Iterator operator()(const ASIO_ERROR& ec, Iterator next)
     {
         if (ec)
         {

@@ -63,7 +63,7 @@ void SerialIOHandler::TryOpen(const TimeDuration& timeout)
 {
     auto port = std::make_shared<SerialChannel>(executor);
 
-    std::error_code ec;
+    ASIO_ERROR ec;
     port->Open(settings, ec);
 
     if (ec)

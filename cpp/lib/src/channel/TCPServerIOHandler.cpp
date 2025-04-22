@@ -32,7 +32,7 @@ namespace opendnp3
 
 void TCPServerIOHandler::Server::AcceptConnection(uint64_t /*sessionid*/,
                                                   const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                                                  asio::ip::tcp::socket socket)
+                                                  ASIO::ip::tcp::socket socket)
 {
     this->callback(executor, std::move(socket));
 }
@@ -42,7 +42,7 @@ TCPServerIOHandler::TCPServerIOHandler(const Logger& logger,
                                        const std::shared_ptr<IChannelListener>& listener,
                                        std::shared_ptr<exe4cpp::StrandExecutor> executor,
                                        IPEndpoint endpoint,
-                                       std::error_code& ec)
+                                       ASIO_ERROR& ec)
     : IOHandler(logger, mode == ServerAcceptMode::CloseExisting, listener),
       executor(std::move(executor)),
       endpoint(std::move(endpoint)),
@@ -62,7 +62,7 @@ void TCPServerIOHandler::ShutdownImpl()
 void TCPServerIOHandler::BeginChannelAccept()
 {
     auto callback = [self = shared_from_this(), this](const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                                                      asio::ip::tcp::socket socket) {
+                                                      ASIO::ip::tcp::socket socket) {
         this->OnNewChannel(TCPSocketChannel::Create(executor, std::move(socket)));
     };
 
@@ -72,7 +72,7 @@ void TCPServerIOHandler::BeginChannelAccept()
     }
     else
     {
-        std::error_code ec;
+        ASIO_ERROR ec;
         this->server = std::make_shared<Server>(this->logger, this->executor, this->endpoint, ec);
 
         if (ec)

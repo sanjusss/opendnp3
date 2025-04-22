@@ -44,7 +44,7 @@ class TLSServerIOHandler final : public IOHandler
                const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
                const IPEndpoint& endpoint,
                const TLSConfig& config,
-               std::error_code& ec)
+               ASIO_ERROR& ec)
             : TLSServer(logger, executor, endpoint, config, ec)
         {
         }
@@ -58,11 +58,11 @@ class TLSServerIOHandler final : public IOHandler
     private:
         callback_t callback;
 
-        virtual bool AcceptConnection(uint64_t sessionid, const asio::ip::tcp::endpoint& remote) override
+        virtual bool AcceptConnection(uint64_t sessionid, const ASIO::ip::tcp::endpoint& remote) override
         {
             return true;
         }
-        virtual bool VerifyCallback(uint64_t sessionid, bool preverified, asio::ssl::verify_context& ctx) override
+        virtual bool VerifyCallback(uint64_t sessionid, bool preverified, ASIO::ssl::verify_context& ctx) override
         {
             return preverified;
         }
@@ -70,7 +70,7 @@ class TLSServerIOHandler final : public IOHandler
 
         virtual void AcceptStream(uint64_t sessionid,
                                   const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                                  std::shared_ptr<asio::ssl::stream<asio::ip::tcp::socket>> stream) override;
+                                  std::shared_ptr<ASIO::ssl::stream<ASIO::ip::tcp::socket>> stream) override;
     };
 
 public:
@@ -80,7 +80,7 @@ public:
                                                       const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
                                                       const IPEndpoint& endpoint,
                                                       const TLSConfig& config,
-                                                      std::error_code& ec)
+                                                      ASIO_ERROR& ec)
     {
         return std::make_shared<TLSServerIOHandler>(logger, mode, listener, executor, endpoint, config, ec);
     }
@@ -91,7 +91,7 @@ public:
                        std::shared_ptr<exe4cpp::StrandExecutor> executor,
                        IPEndpoint endpoint,
                        TLSConfig config,
-                       std::error_code& ec);
+                       ASIO_ERROR& ec);
 
 protected:
     virtual void ShutdownImpl() override;

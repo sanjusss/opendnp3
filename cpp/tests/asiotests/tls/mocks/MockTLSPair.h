@@ -36,7 +36,7 @@ public:
                 uint16_t port,
                 const opendnp3::TLSConfig& client,
                 const opendnp3::TLSConfig& server,
-                std::error_code ec = std::error_code());
+                ASIO_ERROR ec = ASIO_ERROR());
 
     ~MockTLSPair();
 

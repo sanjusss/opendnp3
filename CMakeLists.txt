@@ -83,8 +83,6 @@ endif()
 
 # External dependencies
 include(./deps/asio.cmake)
-include(./deps/exe4cpp.cmake)
-include(./deps/ser4cpp.cmake)
 
 if(DNP3_TLS)
     find_package(OpenSSL 1.1.1 REQUIRED)

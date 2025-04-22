@@ -33,20 +33,20 @@ class TLSStreamChannel final : public IAsyncChannel
 public:
     static std::shared_ptr<IAsyncChannel> Create(
         const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-        const std::shared_ptr<asio::ssl::stream<asio::ip::tcp::socket>>& stream)
+        const std::shared_ptr<ASIO::ssl::stream<ASIO::ip::tcp::socket>>& stream)
     {
         return std::make_shared<TLSStreamChannel>(executor, stream);
     }
 
     TLSStreamChannel(const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                     std::shared_ptr<asio::ssl::stream<asio::ip::tcp::socket>> stream);
+                     std::shared_ptr<ASIO::ssl::stream<ASIO::ip::tcp::socket>> stream);
 
 private:
     void BeginReadImpl(ser4cpp::wseq_t dest) final;
     void BeginWriteImpl(const ser4cpp::rseq_t& data) final;
     void ShutdownImpl() final;
 
-    const std::shared_ptr<asio::ssl::stream<asio::ip::tcp::socket>> stream;
+    const std::shared_ptr<ASIO::ssl::stream<ASIO::ip::tcp::socket>> stream;
 };
 
 } // namespace opendnp3

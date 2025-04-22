@@ -34,7 +34,7 @@ public:
     MockTCPServer(const opendnp3::Logger& logger,
                   std::shared_ptr<exe4cpp::StrandExecutor> executor,
                   opendnp3::IPEndpoint endpoint,
-                  std::error_code& ec)
+                  ASIO_ERROR& ec)
         : TCPServer(logger, executor, endpoint, ec)
     {
     }
@@ -42,7 +42,7 @@ public:
     static std::shared_ptr<MockTCPServer> Create(const opendnp3::Logger& logger,
                                                  std::shared_ptr<exe4cpp::StrandExecutor> executor,
                                                  opendnp3::IPEndpoint endpoint,
-                                                 std::error_code& ec)
+                                                 ASIO_ERROR& ec)
     {
         auto server = std::make_shared<MockTCPServer>(logger, executor, endpoint, ec);
 
@@ -56,7 +56,7 @@ public:
 
     virtual void AcceptConnection(uint64_t sessionid,
                                   const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                                  asio::ip::tcp::socket socket) override
+                                  ASIO::ip::tcp::socket socket) override
     {
         this->channels.push_back(opendnp3::TCPSocketChannel::Create(executor, std::move(socket)));
     }

@@ -32,7 +32,7 @@ namespace opendnp3
 
 void TLSServerIOHandler::Server::AcceptStream(uint64_t /*sessionid*/,
                                               const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                                              std::shared_ptr<asio::ssl::stream<asio::ip::tcp::socket>> stream)
+                                              std::shared_ptr<ASIO::ssl::stream<ASIO::ip::tcp::socket>> stream)
 {
     this->callback(TLSStreamChannel::Create(executor, stream));
 }
@@ -43,7 +43,7 @@ TLSServerIOHandler::TLSServerIOHandler(const Logger& logger,
                                        std::shared_ptr<exe4cpp::StrandExecutor> executor,
                                        IPEndpoint endpoint,
                                        TLSConfig config,
-                                       std::error_code& ec)
+                                       ASIO_ERROR& ec)
     : IOHandler(logger, mode == ServerAcceptMode::CloseExisting, listener),
       executor(std::move(executor)),
       endpoint(std::move(endpoint)),
@@ -73,7 +73,7 @@ void TLSServerIOHandler::BeginChannelAccept()
     }
     else
     {
-        std::error_code ec;
+        ASIO_ERROR ec;
         this->server = std::make_shared<Server>(this->logger, this->executor, this->endpoint, this->config, ec);
 
         if (ec)

@@ -24,29 +24,29 @@ namespace opendnp3
 {
 
 TCPSocketChannel::TCPSocketChannel(const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                                   asio::ip::tcp::socket socket)
+                                   ASIO::ip::tcp::socket socket)
     : IAsyncChannel(executor), socket(std::move(socket))
 {
 }
 
 void TCPSocketChannel::BeginReadImpl(ser4cpp::wseq_t dest)
 {
-    auto callback = [this](const std::error_code& ec, size_t num) { this->OnReadCallback(ec, num); };
+    auto callback = [this](const ASIO_ERROR& ec, size_t num) { this->OnReadCallback(ec, num); };
 
-    socket.async_read_some(asio::buffer(dest, dest.length()), this->executor->wrap(callback));
+    socket.async_read_some(ASIO::buffer(dest, dest.length()), this->executor->wrap(callback));
 }
 
 void TCPSocketChannel::BeginWriteImpl(const ser4cpp::rseq_t& buffer)
 {
-    auto callback = [this](const std::error_code& ec, size_t num) { this->OnWriteCallback(ec, num); };
+    auto callback = [this](const ASIO_ERROR& ec, size_t num) { this->OnWriteCallback(ec, num); };
 
-    asio::async_write(socket, asio::buffer(buffer, buffer.length()), this->executor->wrap(callback));
+    ASIO::async_write(socket, ASIO::buffer(buffer, buffer.length()), this->executor->wrap(callback));
 }
 
 void TCPSocketChannel::ShutdownImpl()
 {
-    std::error_code ec;
-    socket.shutdown(asio::socket_base::shutdown_type::shutdown_both, ec);
+    ASIO_ERROR ec;
+    socket.shutdown(ASIO::socket_base::shutdown_type::shutdown_both, ec);
     socket.close(ec);
 }
 

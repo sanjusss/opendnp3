@@ -45,7 +45,7 @@ public:
               const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
               const IPEndpoint& endpoint,
               const TLSConfig& config,
-              std::error_code& ec);
+              ASIO_ERROR& ec);
 
     /// Stop listening for connections, permanently shutting down the listener
     void Shutdown() override;
@@ -53,11 +53,11 @@ public:
 protected:
     // Inherited classes must implement these methods
 
-    virtual bool AcceptConnection(uint64_t sessionid, const asio::ip::tcp::endpoint& remote) = 0;
-    virtual bool VerifyCallback(uint64_t sessionid, bool preverified, asio::ssl::verify_context& ctx) = 0;
+    virtual bool AcceptConnection(uint64_t sessionid, const ASIO::ip::tcp::endpoint& remote) = 0;
+    virtual bool VerifyCallback(uint64_t sessionid, bool preverified, ASIO::ssl::verify_context& ctx) = 0;
     virtual void AcceptStream(uint64_t sessionid,
                               const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                              std::shared_ptr<asio::ssl::stream<asio::ip::tcp::socket>> stream)
+                              std::shared_ptr<ASIO::ssl::stream<ASIO::ip::tcp::socket>> stream)
         = 0;
     virtual void OnShutdown() = 0;
 
@@ -67,12 +67,12 @@ protected:
     std::shared_ptr<exe4cpp::StrandExecutor> executor;
 
 private:
-    std::error_code ConfigureContext(const TLSConfig& config, std::error_code& ec);
-    std::error_code ConfigureListener(const std::string& adapter, std::error_code& ec);
+    ASIO_ERROR ConfigureContext(const TLSConfig& config, ASIO_ERROR& ec);
+    ASIO_ERROR ConfigureListener(const std::string& adapter, ASIO_ERROR& ec);
 
     SSLContext ctx;
-    asio::ip::tcp::endpoint endpoint;
-    asio::ip::tcp::acceptor acceptor;
+    ASIO::ip::tcp::endpoint endpoint;
+    ASIO::ip::tcp::acceptor acceptor;
 
     bool isShutdown = false;
     uint64_t session_id = 0;

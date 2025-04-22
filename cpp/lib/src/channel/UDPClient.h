@@ -35,7 +35,7 @@ class UDPClient final : public std::enable_shared_from_this<UDPClient>, private 
 
 public:
     typedef std::function<void(
-        const std::shared_ptr<exe4cpp::StrandExecutor>& executor, asio::ip::udp::socket, const std::error_code& ec)>
+        const std::shared_ptr<exe4cpp::StrandExecutor>& executor, ASIO::ip::udp::socket, const ASIO_ERROR& ec)>
         connect_callback_t;
 
     static std::shared_ptr<UDPClient> Create(const Logger& logger,
@@ -52,18 +52,18 @@ public:
 
 private:
     void HandleResolveResult(const connect_callback_t& callback,
-                             const asio::ip::udp::resolver::iterator& endpoints,
-                             const std::error_code& ec);
+                             const ASIO::ip::udp::resolver::iterator& endpoints,
+                             const ASIO_ERROR& ec);
 
-    bool PostConnectError(const connect_callback_t& callback, const std::error_code& ec);
+    bool PostConnectError(const connect_callback_t& callback, const ASIO_ERROR& ec);
 
     bool connecting = false;
     bool canceled = false;
 
     LoggingConnectionCondition condition;
     const std::shared_ptr<exe4cpp::StrandExecutor> executor;
-    asio::ip::udp::socket socket;
-    asio::ip::udp::resolver resolver;
+    ASIO::ip::udp::socket socket;
+    ASIO::ip::udp::resolver resolver;
 };
 
 } // namespace opendnp3

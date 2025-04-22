@@ -38,15 +38,15 @@ class TLSClient final : public std::enable_shared_from_this<TLSClient>, private 
 
 public:
     typedef std::function<void(const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                               const std::shared_ptr<asio::ssl::stream<asio::ip::tcp::socket>>& stream,
-                               const std::error_code& ec)>
+                               const std::shared_ptr<ASIO::ssl::stream<ASIO::ip::tcp::socket>>& stream,
+                               const ASIO_ERROR& ec)>
         connect_callback_t;
 
     static std::shared_ptr<TLSClient> Create(const Logger& logger,
                                              const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
                                              const std::string& adapter,
                                              const TLSConfig& config,
-                                             std::error_code& ec)
+                                             ASIO_ERROR& ec)
     {
         auto ret = std::make_shared<TLSClient>(logger, executor, adapter, config, ec);
         return ec ? nullptr : ret;
@@ -56,23 +56,23 @@ public:
               const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
               std::string adapter,
               const TLSConfig& config,
-              std::error_code& ec);
+              ASIO_ERROR& ec);
 
     bool Cancel();
 
     bool BeginConnect(const IPEndpoint& remote, const connect_callback_t& callback);
 
 private:
-    void LogVerifyCallback(bool preverified, asio::ssl::verify_context& ctx);
+    void LogVerifyCallback(bool preverified, ASIO::ssl::verify_context& ctx);
 
     void HandleResolveResult(const connect_callback_t& callback,
-                             const std::shared_ptr<asio::ssl::stream<asio::ip::tcp::socket>>& stream,
-                             const asio::ip::tcp::resolver::iterator& endpoints,
-                             const std::error_code& ec);
+                             const std::shared_ptr<ASIO::ssl::stream<ASIO::ip::tcp::socket>>& stream,
+                             const ASIO::ip::tcp::resolver::iterator& endpoints,
+                             const ASIO_ERROR& ec);
 
     void HandleConnectResult(const connect_callback_t& callback,
-                             const std::shared_ptr<asio::ssl::stream<asio::ip::tcp::socket>>& stream,
-                             const std::error_code& ec);
+                             const std::shared_ptr<ASIO::ssl::stream<ASIO::ip::tcp::socket>>& stream,
+                             const ASIO_ERROR& ec);
 
     bool canceled = false;
 
@@ -81,8 +81,8 @@ private:
     const std::shared_ptr<exe4cpp::StrandExecutor> executor;
     const std::string adapter;
     SSLContext ctx;
-    asio::ip::tcp::endpoint localEndpoint;
-    asio::ip::tcp::resolver resolver;
+    ASIO::ip::tcp::endpoint localEndpoint;
+    ASIO::ip::tcp::resolver resolver;
 };
 
 } // namespace opendnp3

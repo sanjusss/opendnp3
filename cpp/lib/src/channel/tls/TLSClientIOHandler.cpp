@@ -52,7 +52,7 @@ void TLSClientIOHandler::ShutdownImpl()
 
 void TLSClientIOHandler::BeginChannelAccept()
 {
-    std::error_code ec;
+    ASIO_ERROR ec;
 
     this->client = TLSClient::Create(logger, executor, adapter, config, ec);
 
@@ -89,8 +89,8 @@ void TLSClientIOHandler::StartConnect(const TimeDuration& delay)
         return;
 
     auto cb = [=, self = shared_from_this()](const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                                             const std::shared_ptr<asio::ssl::stream<asio::ip::tcp::socket>>& stream,
-                                             const std::error_code& ec) -> void {
+                                             const std::shared_ptr<ASIO::ssl::stream<ASIO::ip::tcp::socket>>& stream,
+                                             const ASIO_ERROR& ec) -> void {
         if (ec)
         {
             FORMAT_LOG_BLOCK(this->logger, flags::WARN, "Error Connecting: %s", ec.message().c_str());

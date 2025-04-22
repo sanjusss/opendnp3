@@ -22,80 +22,80 @@
 namespace opendnp3
 {
 
-asio::serial_port_base::stop_bits ConvertStopBits(StopBits stopBits)
+ASIO::serial_port_base::stop_bits ConvertStopBits(StopBits stopBits)
 {
-    asio::serial_port_base::stop_bits::type t = asio::serial_port_base::stop_bits::one;
+    ASIO::serial_port_base::stop_bits::type t = ASIO::serial_port_base::stop_bits::one;
 
     switch (stopBits)
     {
     case (StopBits::One):
-        t = asio::serial_port_base::stop_bits::one;
+        t = ASIO::serial_port_base::stop_bits::one;
         break;
     case (StopBits::OnePointFive):
-        t = asio::serial_port_base::stop_bits::onepointfive;
+        t = ASIO::serial_port_base::stop_bits::onepointfive;
         break;
     case (StopBits::Two):
-        t = asio::serial_port_base::stop_bits::two;
+        t = ASIO::serial_port_base::stop_bits::two;
         break;
     default:
         break;
     }
 
-    return asio::serial_port_base::stop_bits(t);
+    return ASIO::serial_port_base::stop_bits(t);
 }
 
-asio::serial_port_base::flow_control ConvertFlow(FlowControl flowType)
+ASIO::serial_port_base::flow_control ConvertFlow(FlowControl flowType)
 {
-    asio::serial_port_base::flow_control::type t = asio::serial_port_base::flow_control::none;
+    ASIO::serial_port_base::flow_control::type t = ASIO::serial_port_base::flow_control::none;
 
     switch (flowType)
     {
     case (FlowControl::None):
-        t = asio::serial_port_base::flow_control::none;
+        t = ASIO::serial_port_base::flow_control::none;
         break;
     case (FlowControl::XONXOFF):
-        t = asio::serial_port_base::flow_control::software;
+        t = ASIO::serial_port_base::flow_control::software;
         break;
     case (FlowControl::Hardware):
-        t = asio::serial_port_base::flow_control::hardware;
+        t = ASIO::serial_port_base::flow_control::hardware;
         break;
     default:
         break;
     }
 
-    return asio::serial_port_base::flow_control(t);
+    return ASIO::serial_port_base::flow_control(t);
 }
 
-asio::serial_port_base::character_size ConvertDataBits(int aDataBits)
+ASIO::serial_port_base::character_size ConvertDataBits(int aDataBits)
 {
-    return asio::serial_port_base::character_size(static_cast<unsigned int>(aDataBits));
+    return ASIO::serial_port_base::character_size(static_cast<unsigned int>(aDataBits));
 }
 
-asio::serial_port_base::baud_rate ConvertBaud(int aBaud)
+ASIO::serial_port_base::baud_rate ConvertBaud(int aBaud)
 {
-    return asio::serial_port_base::baud_rate(static_cast<unsigned int>(aBaud));
+    return ASIO::serial_port_base::baud_rate(static_cast<unsigned int>(aBaud));
 }
 
-asio::serial_port_base::parity ConvertParity(Parity parity)
+ASIO::serial_port_base::parity ConvertParity(Parity parity)
 {
-    asio::serial_port_base::parity::type t = asio::serial_port_base::parity::none;
+    ASIO::serial_port_base::parity::type t = ASIO::serial_port_base::parity::none;
 
     switch (parity)
     {
     case (Parity::Even):
-        t = asio::serial_port_base::parity::even;
+        t = ASIO::serial_port_base::parity::even;
         break;
     case (Parity::Odd):
-        t = asio::serial_port_base::parity::odd;
+        t = ASIO::serial_port_base::parity::odd;
         break;
     default:
         break;
     }
 
-    return asio::serial_port_base::parity(t);
+    return ASIO::serial_port_base::parity(t);
 }
 
-bool Configure(const SerialSettings& settings, asio::serial_port& port, std::error_code& ec)
+bool Configure(const SerialSettings& settings, ASIO::serial_port& port, ASIO_ERROR& ec)
 {
     // Set all the various options
     port.set_option(ConvertBaud(settings.baud), ec);

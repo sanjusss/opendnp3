@@ -22,10 +22,10 @@
 
 #include <sstream>
 
-MockIO::Timeout::Timeout(asio::io_context& service, std::chrono::steady_clock::duration timeout)
-    : timer(std::make_shared<asio::basic_waitable_timer<std::chrono::steady_clock>>(service, timeout))
+MockIO::Timeout::Timeout(ASIO::io_context& service, std::chrono::steady_clock::duration timeout)
+    : timer(std::make_shared<ASIO::basic_waitable_timer<std::chrono::steady_clock>>(service, timeout))
 {
-    auto callback = [t = timer](const std::error_code& ec) {
+    auto callback = [t = timer](const ASIO_ERROR& ec) {
         if (!ec)
         {
             throw std::logic_error("timeout before completion");
@@ -47,7 +47,7 @@ size_t MockIO::RunUntilTimeout(const std::function<bool()>& condition, std::chro
 
     while (!condition())
     {
-        std::error_code ec;
+        ASIO_ERROR ec;
         const auto num = this->io->run_one(ec);
         if (ec)
             throw std::logic_error(ec.message());
@@ -83,7 +83,7 @@ void MockIO::CompleteInMaxXIterations(size_t expectedIterations,
             throw std::logic_error(oss.str());
         }
 
-        std::error_code ec;
+        ASIO_ERROR ec;
         const auto num = this->io->run_one(ec);
         if (ec)
             throw std::logic_error(ec.message());
@@ -105,7 +105,7 @@ size_t MockIO::RunUntilOutOfWork()
 
     while (true)
     {
-        std::error_code ec;
+        ASIO_ERROR ec;
         const auto num = this->io->poll_one(ec);
         if (ec)
             throw std::logic_error(ec.message());

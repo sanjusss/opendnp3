@@ -37,12 +37,12 @@ MasterTLSServer::MasterTLSServer(const Logger& logger,
                                  const TLSConfig& config,
                                  std::shared_ptr<IListenCallbacks> callbacks,
                                  std::shared_ptr<ResourceManager> manager,
-                                 std::error_code& ec)
+                                 ASIO_ERROR& ec)
     : TLSServer(logger, executor, endpoint, config, ec), callbacks(std::move(callbacks)), manager(std::move(manager))
 {
 }
 
-bool MasterTLSServer::AcceptConnection(uint64_t sessionid, const asio::ip::tcp::endpoint& remote)
+bool MasterTLSServer::AcceptConnection(uint64_t sessionid, const ASIO::ip::tcp::endpoint& remote)
 {
     std::ostringstream oss;
     oss << remote;
@@ -57,7 +57,7 @@ bool MasterTLSServer::AcceptConnection(uint64_t sessionid, const asio::ip::tcp::
     return false;
 }
 
-bool MasterTLSServer::VerifyCallback(uint64_t sessionid, bool preverified, asio::ssl::verify_context& ctx)
+bool MasterTLSServer::VerifyCallback(uint64_t sessionid, bool preverified, ASIO::ssl::verify_context& ctx)
 {
     const int MAX_SUBJECT_NAME = 512;
     int depth = X509_STORE_CTX_get_error_depth(ctx.native_handle());
@@ -95,7 +95,7 @@ bool MasterTLSServer::VerifyCallback(uint64_t sessionid, bool preverified, asio:
 
 void MasterTLSServer::AcceptStream(uint64_t sessionid,
                                    const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                                   std::shared_ptr<asio::ssl::stream<asio::ip::tcp::socket>> stream)
+                                   std::shared_ptr<ASIO::ssl::stream<ASIO::ip::tcp::socket>> stream)
 {
     auto channel = TLSStreamChannel::Create(executor->fork(), stream); // run the link session in a new strand
 

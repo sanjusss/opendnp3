@@ -22,13 +22,13 @@
 
 #include "opendnp3/channel/SerialSettings.h"
 
-#include <asio.hpp>
+#include "AsioHeader.h"
 
 namespace opendnp3
 {
 
 // Serial port configuration functions "free" to keep the classes simple.
-bool Configure(const SerialSettings& settings, asio::serial_port& port, std::error_code& ec);
+bool Configure(const SerialSettings& settings, ASIO::serial_port& port, ASIO_ERROR& ec);
 
 } // namespace opendnp3
 

@@ -32,7 +32,7 @@ class MockTCPPair
 {
 
 public:
-    MockTCPPair(std::shared_ptr<MockIO> io, uint16_t port, std::error_code ec = std::error_code());
+    MockTCPPair(std::shared_ptr<MockIO> io, uint16_t port, ASIO_ERROR ec = ASIO_ERROR());
 
     ~MockTCPPair();
 

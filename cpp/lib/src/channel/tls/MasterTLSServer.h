@@ -41,7 +41,7 @@ public:
                     const TLSConfig& tlsConfig,
                     std::shared_ptr<IListenCallbacks> callbacks,
                     std::shared_ptr<ResourceManager> manager,
-                    std::error_code& ec);
+                    ASIO_ERROR& ec);
 
     static std::shared_ptr<MasterTLSServer> Create(const Logger& logger,
                                                    const std::shared_ptr<exe4cpp::StrandExecutor> executor,
@@ -49,7 +49,7 @@ public:
                                                    const TLSConfig& tlsConfig,
                                                    const std::shared_ptr<IListenCallbacks> callbacks,
                                                    const std::shared_ptr<ResourceManager>& manager,
-                                                   std::error_code& ec)
+                                                   ASIO_ERROR& ec)
     {
         auto ret = std::make_shared<MasterTLSServer>(logger, executor, endpoint, tlsConfig, callbacks, manager, ec);
 
@@ -61,13 +61,13 @@ public:
         return ret;
     }
 
-    virtual bool AcceptConnection(uint64_t sessionid, const asio::ip::tcp::endpoint& remote) override;
+    virtual bool AcceptConnection(uint64_t sessionid, const ASIO::ip::tcp::endpoint& remote) override;
 
-    virtual bool VerifyCallback(uint64_t sessionid, bool preverified, asio::ssl::verify_context& ctx) override;
+    virtual bool VerifyCallback(uint64_t sessionid, bool preverified, ASIO::ssl::verify_context& ctx) override;
 
     virtual void AcceptStream(uint64_t sessionid,
                               const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                              std::shared_ptr<asio::ssl::stream<asio::ip::tcp::socket>> stream) override;
+                              std::shared_ptr<ASIO::ssl::stream<ASIO::ip::tcp::socket>> stream) override;
 
     virtual void OnShutdown() override;
 

@@ -37,7 +37,7 @@ MasterTCPServer::MasterTCPServer(const Logger& logger,
                                  const IPEndpoint& endpoint,
                                  std::shared_ptr<IListenCallbacks> callbacks,
                                  std::shared_ptr<ResourceManager> manager,
-                                 std::error_code& ec)
+                                 ASIO_ERROR& ec)
     : TCPServer(logger, executor, endpoint, ec), callbacks(std::move(callbacks)), manager(std::move(manager))
 {
 }
@@ -49,7 +49,7 @@ void MasterTCPServer::OnShutdown()
 
 void MasterTCPServer::AcceptConnection(uint64_t sessionid,
                                        const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                                       asio::ip::tcp::socket socket)
+                                       ASIO::ip::tcp::socket socket)
 {
     std::ostringstream oss;
     oss << socket.remote_endpoint();

@@ -36,7 +36,7 @@ TEST_CASE(SUITE("Test automatic resource reclaimation"))
 
     uint32_t counter[NUM_STRAND] = {0};
 
-    auto io = std::make_shared<asio::io_context>();
+    auto io = std::make_shared<ASIO::io_context>();
 
     ThreadPool pool(io, NUM_THREAD);
 
@@ -68,7 +68,7 @@ TEST_CASE(SUITE("Executor dispatch is from only one thread at a time"))
     const int NUM_THREAD = 10;
     const int NUM_OPS = 1000;
 
-    auto io = std::make_shared<asio::io_context>();
+    auto io = std::make_shared<ASIO::io_context>();
 
     int sum = 0;
 
@@ -91,7 +91,7 @@ TEST_CASE(SUITE("Executor dispatch is in same order as post order"))
     const int NUM_THREAD = 10;
     const int NUM_OPS = 1000;
 
-    auto io = std::make_shared<asio::io_context>();
+    auto io = std::make_shared<ASIO::io_context>();
 
     int order = 0;
     bool is_ordered = true;
@@ -128,7 +128,7 @@ TEST_CASE(SUITE("Test ReturnFrom<T>()"))
     const int NUM_ACTIONS = 100;
     int counter = 0;
 
-    auto io = std::make_shared<asio::io_context>();
+    auto io = std::make_shared<ASIO::io_context>();
 
     {
         ThreadPool pool(io, NUM_THREAD);

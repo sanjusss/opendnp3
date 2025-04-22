@@ -107,7 +107,7 @@ public:
     const std::shared_ptr<exe4cpp::StrandExecutor> executor;
 
 protected:
-    inline void OnReadCallback(const std::error_code& ec, size_t num)
+    inline void OnReadCallback(const ASIO_ERROR& ec, size_t num)
     {
         this->reading = false;
         if (this->callbacks && !is_shutting_down)
@@ -116,7 +116,7 @@ protected:
         }
     }
 
-    inline void OnWriteCallback(const std::error_code& ec, size_t num)
+    inline void OnWriteCallback(const ASIO_ERROR& ec, size_t num)
     {
         this->writing = false;
         if (this->callbacks && !is_shutting_down)

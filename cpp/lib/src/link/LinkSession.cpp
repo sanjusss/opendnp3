@@ -80,7 +80,7 @@ void LinkSession::SetLogFilters(const LogLevels& filters)
     this->logger.set_levels(filters);
 }
 
-void LinkSession::OnReadComplete(const std::error_code& ec, size_t num)
+void LinkSession::OnReadComplete(const ASIO_ERROR& ec, size_t num)
 {
     if (ec)
     {
@@ -94,7 +94,7 @@ void LinkSession::OnReadComplete(const std::error_code& ec, size_t num)
     }
 }
 
-void LinkSession::OnWriteComplete(const std::error_code& ec, size_t /*num*/)
+void LinkSession::OnWriteComplete(const ASIO_ERROR& ec, size_t /*num*/)
 {
     if (ec)
     {

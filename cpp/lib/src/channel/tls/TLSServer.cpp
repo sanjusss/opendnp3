@@ -33,11 +33,11 @@ TLSServer::TLSServer(const Logger& logger,
                      const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
                      const IPEndpoint& endpoint,
                      const TLSConfig& config,
-                     std::error_code& ec)
+                     ASIO_ERROR& ec)
     : logger(logger),
       executor(executor),
       ctx(logger, true, config, ec),
-      endpoint(asio::ip::tcp::v4(), endpoint.port),
+      endpoint(ASIO::ip::tcp::v4(), endpoint.port),
       acceptor(*executor->get_context())
 {
     if (!ec)
@@ -52,7 +52,7 @@ void TLSServer::Shutdown()
         return;
 
     this->isShutdown = true;
-    std::error_code ec;
+    ASIO_ERROR ec;
     this->acceptor.close(ec);
 
     if (ec)
@@ -61,9 +61,9 @@ void TLSServer::Shutdown()
     }
 }
 
-std::error_code TLSServer::ConfigureListener(const std::string& adapter, std::error_code& ec)
+ASIO_ERROR TLSServer::ConfigureListener(const std::string& adapter, ASIO_ERROR& ec)
 {
-    auto address = asio::ip::address::from_string(adapter, ec);
+    auto address = ASIO::ip::address::from_string(adapter, ec);
 
     if (ec)
     {
@@ -74,12 +74,12 @@ std::error_code TLSServer::ConfigureListener(const std::string& adapter, std::er
 
     if (this->acceptor.open(this->endpoint.protocol(), ec))
         return ec;
-    if (this->acceptor.set_option(asio::ip::tcp::acceptor::reuse_address(true), ec))
+    if (this->acceptor.set_option(ASIO::ip::tcp::acceptor::reuse_address(true), ec))
         return ec;
     if (this->acceptor.bind(this->endpoint, ec))
         return ec;
 
-    if (this->acceptor.listen(asio::socket_base::max_connections, ec))
+    if (this->acceptor.listen(ASIO::socket_base::max_connections, ec))
         return ec;
 
     std::ostringstream oss;
@@ -90,7 +90,7 @@ std::error_code TLSServer::ConfigureListener(const std::string& adapter, std::er
 
 void TLSServer::StartAccept()
 {
-    std::error_code ec;
+    ASIO_ERROR ec;
 
     const auto ID = this->session_id;
     ++this->session_id;
@@ -100,9 +100,9 @@ void TLSServer::StartAccept()
 
     // this could be a unique_ptr once move semantics are supported in lambdas
     auto stream
-        = std::make_shared<asio::ssl::stream<asio::ip::tcp::socket>>(*this->executor->get_context(), self->ctx.value);
+        = std::make_shared<ASIO::ssl::stream<ASIO::ip::tcp::socket>>(*this->executor->get_context(), self->ctx.value);
 
-    auto verify = [this, ID](bool preverified, asio::ssl::verify_context& ctx) {
+    auto verify = [this, ID](bool preverified, ASIO::ssl::verify_context& ctx) {
         return this->VerifyCallback(ID, preverified, ctx);
     };
 
@@ -111,7 +111,7 @@ void TLSServer::StartAccept()
     if (ec)
         return;
 
-    auto accept_cb = [self, stream, ID](std::error_code ec) -> void {
+    auto accept_cb = [self, stream, ID](ASIO_ERROR ec) -> void {
         if (ec)
         {
             SIMPLE_LOG_BLOCK(self->logger, flags::INFO, ec.message().c_str());
@@ -149,7 +149,7 @@ void TLSServer::StartAccept()
             return;
         }
 
-        auto handshake_cb = [stream, ID, self](const std::error_code& ec) {
+        auto handshake_cb = [stream, ID, self](const ASIO_ERROR& ec) {
             if (ec)
             {
                 FORMAT_LOG_BLOCK(self->logger, flags::INFO, "TLS handshake failed: %s", ec.message().c_str());
@@ -160,7 +160,7 @@ void TLSServer::StartAccept()
         };
 
         // Begin the TLS handshake
-        stream->async_handshake(asio::ssl::stream_base::server, self->executor->wrap(handshake_cb));
+        stream->async_handshake(ASIO::ssl::stream_base::server, self->executor->wrap(handshake_cb));
     };
 
     this->acceptor.async_accept(stream->lowest_layer(), this->executor->wrap(accept_cb));

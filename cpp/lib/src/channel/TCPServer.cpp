@@ -32,10 +32,10 @@ namespace opendnp3
 TCPServer::TCPServer(const Logger& logger,
                      const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
                      const IPEndpoint& endpoint,
-                     std::error_code& ec)
+                     ASIO_ERROR& ec)
     : logger(logger),
       executor(executor),
-      endpoint(asio::ip::tcp::v4(), endpoint.port),
+      endpoint(ASIO::ip::tcp::v4(), endpoint.port),
       acceptor(*executor->get_context()),
       socket(*executor->get_context())
 {
@@ -49,7 +49,7 @@ void TCPServer::Shutdown()
 
     this->isShutdown = true;
 
-    std::error_code ec;
+    ASIO_ERROR ec;
     this->acceptor.close(ec);
 
     if (ec)
@@ -58,9 +58,9 @@ void TCPServer::Shutdown()
     }
 }
 
-void TCPServer::Configure(const std::string& adapter, std::error_code& ec)
+void TCPServer::Configure(const std::string& adapter, ASIO_ERROR& ec)
 {
-    auto address = asio::ip::address::from_string(adapter, ec);
+    auto address = ASIO::ip::address::from_string(adapter, ec);
 
     if (ec)
     {
@@ -75,7 +75,7 @@ void TCPServer::Configure(const std::string& adapter, std::error_code& ec)
         return;
     }
 
-    acceptor.set_option(asio::ip::tcp::acceptor::reuse_address(true), ec);
+    acceptor.set_option(ASIO::ip::tcp::acceptor::reuse_address(true), ec);
 
     if (ec)
     {
@@ -89,7 +89,7 @@ void TCPServer::Configure(const std::string& adapter, std::error_code& ec)
         return;
     }
 
-    acceptor.listen(asio::socket_base::max_connections, ec);
+    acceptor.listen(ASIO::socket_base::max_connections, ec);
 
     if (!ec)
     {
@@ -102,7 +102,7 @@ void TCPServer::Configure(const std::string& adapter, std::error_code& ec)
 void TCPServer::StartAccept()
 {
     // this ensures that the TCPListener is never deleted during an active callback
-    auto callback = [self = shared_from_this()](std::error_code ec) {
+    auto callback = [self = shared_from_this()](ASIO_ERROR ec) {
         if (ec)
         {
             SIMPLE_LOG_BLOCK(self->logger, flags::INFO, ec.message().c_str());

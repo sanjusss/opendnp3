@@ -30,12 +30,12 @@ class TCPSocketChannel final : public IAsyncChannel
 
 public:
     static std::shared_ptr<IAsyncChannel> Create(std::shared_ptr<exe4cpp::StrandExecutor> executor,
-                                                 asio::ip::tcp::socket socket)
+                                                 ASIO::ip::tcp::socket socket)
     {
         return std::make_shared<TCPSocketChannel>(executor, std::move(socket));
     }
 
-    TCPSocketChannel(const std::shared_ptr<exe4cpp::StrandExecutor>& executor, asio::ip::tcp::socket socket);
+    TCPSocketChannel(const std::shared_ptr<exe4cpp::StrandExecutor>& executor, ASIO::ip::tcp::socket socket);
 
 protected:
     void BeginReadImpl(ser4cpp::wseq_t dest) final;
@@ -43,7 +43,7 @@ protected:
     void ShutdownImpl() final;
 
 private:
-    asio::ip::tcp::socket socket;
+    ASIO::ip::tcp::socket socket;
 };
 
 } // namespace opendnp3

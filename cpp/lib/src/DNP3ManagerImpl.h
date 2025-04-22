@@ -107,7 +107,7 @@ public:
 
 private:
     Logger logger;
-    const std::shared_ptr<asio::io_context> io;
+    const std::shared_ptr<ASIO::io_context> io;
     exe4cpp::ThreadPool threadpool;
     std::shared_ptr<ResourceManager> resources;
 };

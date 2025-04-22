@@ -31,16 +31,16 @@ class MockIO final : public std::enable_shared_from_this<MockIO>
     {
 
     public:
-        Timeout(asio::io_context& service, std::chrono::steady_clock::duration timeout);
+        Timeout(ASIO::io_context& service, std::chrono::steady_clock::duration timeout);
 
         ~Timeout();
 
     private:
-        std::shared_ptr<asio::basic_waitable_timer<std::chrono::steady_clock>> timer;
+        std::shared_ptr<ASIO::basic_waitable_timer<std::chrono::steady_clock>> timer;
     };
 
 public:
-    MockIO() : io(std::make_shared<asio::io_context>()) {}
+    MockIO() : io(std::make_shared<ASIO::io_context>()) {}
 
     static std::shared_ptr<MockIO> Create()
     {
@@ -61,7 +61,7 @@ public:
 
     size_t RunUntilOutOfWork();
 
-    std::shared_ptr<asio::io_context> io;
+    std::shared_ptr<ASIO::io_context> io;
 };
 
 #endif

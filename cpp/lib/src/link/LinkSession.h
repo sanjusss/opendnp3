@@ -73,9 +73,9 @@ private:
     void ShutdownImpl();
 
     // IChannelCallbacks
-    void OnReadComplete(const std::error_code& ec, size_t num) final;
+    void OnReadComplete(const ASIO_ERROR& ec, size_t num) final;
 
-    void OnWriteComplete(const std::error_code& ec, size_t num) final;
+    void OnWriteComplete(const ASIO_ERROR& ec, size_t num) final;
 
     // ILinkTx
     void BeginTransmit(const ser4cpp::rseq_t& buffer, ILinkSession& session) final;

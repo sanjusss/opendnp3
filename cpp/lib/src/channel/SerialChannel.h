@@ -38,14 +38,14 @@ public:
 
     SerialChannel(const std::shared_ptr<exe4cpp::StrandExecutor>& executor);
 
-    bool Open(const SerialSettings& settings, std::error_code& ec);
+    bool Open(const SerialSettings& settings, ASIO_ERROR& ec);
 
 private:
     void BeginReadImpl(ser4cpp::wseq_t buffer) final;
     void BeginWriteImpl(const ser4cpp::rseq_t& buffer) final;
     void ShutdownImpl() final;
 
-    asio::serial_port port;
+    ASIO::serial_port port;
 };
 
 } // namespace opendnp3

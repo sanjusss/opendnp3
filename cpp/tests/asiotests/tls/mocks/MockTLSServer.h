@@ -35,7 +35,7 @@ public:
                   std::shared_ptr<exe4cpp::StrandExecutor> executor,
                   opendnp3::IPEndpoint endpoint,
                   const opendnp3::TLSConfig& config,
-                  std::error_code& ec)
+                  ASIO_ERROR& ec)
         : TLSServer(logger, executor, endpoint, config, ec)
     {
     }
@@ -44,7 +44,7 @@ public:
                                                  std::shared_ptr<exe4cpp::StrandExecutor> executor,
                                                  opendnp3::IPEndpoint endpoint,
                                                  const opendnp3::TLSConfig& config,
-                                                 std::error_code& ec)
+                                                 ASIO_ERROR& ec)
     {
         auto server = std::make_shared<MockTLSServer>(logger, executor, endpoint, config, ec);
 
@@ -56,19 +56,19 @@ public:
         return server;
     }
 
-    bool AcceptConnection(uint64_t sessionid, const asio::ip::tcp::endpoint& remote) override
+    bool AcceptConnection(uint64_t sessionid, const ASIO::ip::tcp::endpoint& remote) override
     {
         return true;
     }
 
-    bool VerifyCallback(uint64_t sessionid, bool preverified, asio::ssl::verify_context& ctx) override
+    bool VerifyCallback(uint64_t sessionid, bool preverified, ASIO::ssl::verify_context& ctx) override
     {
         return preverified;
     }
 
     void AcceptStream(uint64_t sessionid,
                       const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
-                      std::shared_ptr<asio::ssl::stream<asio::ip::tcp::socket>> stream) override
+                      std::shared_ptr<ASIO::ssl::stream<ASIO::ip::tcp::socket>> stream) override
     {
         channels.push_back(opendnp3::TLSStreamChannel::Create(executor, stream));
     }
