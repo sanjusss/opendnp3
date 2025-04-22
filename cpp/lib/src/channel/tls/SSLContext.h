@@ -24,7 +24,7 @@
 #include "opendnp3/logging/Logger.h"
 #include "opendnp3/util/Uncopyable.h"
 
-#include <asio/ssl.hpp>
+#include "AsioHeader.h"
 
 namespace opendnp3
 {

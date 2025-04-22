@@ -22,7 +22,7 @@
 
 #include "channel/IAsyncChannel.h"
 
-#include <asio/ssl.hpp>
+#include "AsioHeader.h"
 
 namespace opendnp3
 {

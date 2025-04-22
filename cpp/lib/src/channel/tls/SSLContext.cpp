@@ -76,7 +76,7 @@ ASIO_ERROR SSLContext::ApplyConfig(const TLSConfig& config, bool server, ASIO_ER
     {
         if (SSL_CTX_set_cipher_list(value.native_handle(), config.cipherList.c_str()) == 0)
         {
-            ec = ASIO::error_code();
+            ec = ASIO_ERROR();
             FORMAT_LOG_BLOCK(logger, flags::ERR, "Error calling ssl::context::set_cipher_list(..): %s",
                              ec.message().c_str());
             return ec;

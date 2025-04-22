@@ -28,7 +28,7 @@
 
 #include <exe4cpp/asio/StrandExecutor.h>
 
-#include <asio/ssl.hpp>
+#include "AsioHeader.h"
 
 namespace opendnp3
 {

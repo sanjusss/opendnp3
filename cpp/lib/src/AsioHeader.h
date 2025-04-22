@@ -3,11 +3,13 @@
 
 #ifdef ASIO_STANDALONE
 #include <asio.hpp>
+#include <asio/ssl.hpp>
 #define ASIO asio
 typedef std::error_code ASIO_ERROR;
 #else
 #include <boost/asio.hpp>
 #include <boost/system/error_code.hpp>
+#include <boost/asio/ssl.hpp>
 #define ASIO boost::asio
 typedef boost::system::error_code ASIO_ERROR;
 #endif

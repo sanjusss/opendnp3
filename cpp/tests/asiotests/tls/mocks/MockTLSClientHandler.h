@@ -24,7 +24,7 @@
 #include "channel/IAsyncChannel.h"
 #include "channel/tls/TLSStreamChannel.h"
 
-#include <asio/ssl.hpp>
+#include "AsioHeader.h"
 
 #include <deque>
 
