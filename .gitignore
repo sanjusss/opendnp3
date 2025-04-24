@@ -167,3 +167,4 @@ vcpkg_installed
 
 # vcpkg
 /vcpkg_installed
+/CMakeSettings.json
