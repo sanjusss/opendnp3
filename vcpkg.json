@@ -1,0 +1,27 @@
+{
+  "dependencies": [
+    "openssl",
+    {
+      "name": "asio",
+      "features": [
+        "openssl"
+      ]
+    },
+    "catch2"
+  ],
+  "overrides": [
+    {
+      "name": "openssl",
+      "version": "1.1.1n#1"
+    },
+    {
+      "name": "asio",
+      "version": "1.18.2"
+    },
+
+    {
+      "name": "catch2",
+      "version": "2.11.3"
+    }
+  ]
+}

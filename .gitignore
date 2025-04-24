@@ -125,6 +125,7 @@ cpp/unittest.log
 dotnet/bindings.VC.VC.opendb
 dotnet/bindings.VC.db
 dotnet/.vs
+out/
 
 #installer
 dotnet/simulator/setup*
@@ -150,7 +151,7 @@ test_html/
 coverage.info
 cpp/demos/cover.info
 cpp/demos/cover_html/
-
+vcpkg_installed
 # out-of-directory builds
 /build*
 
@@ -163,3 +164,6 @@ cpp/demos/cover_html/
 # VS Code
 .vscode/
 .cache/
+
+# vcpkg
+/vcpkg_installed

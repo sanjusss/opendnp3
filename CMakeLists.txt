@@ -43,7 +43,7 @@ else()
 endif()
 
 # Compilation options
-option(DNP3_TLS "Build TLS client/server support (requires OpenSSL)" OFF)
+option(DNP3_TLS "Build TLS client/server support (requires OpenSSL)" ON)
 option(DNP3_TESTS "Build unit and integration tests" OFF)
 option(DNP3_EXAMPLES "Build example applications" OFF)
 option(DNP3_FUZZING "Build Google OSS-Fuzz targets" OFF)
@@ -55,6 +55,7 @@ if(WIN32)
 endif()
 option(DNP3_EVERYTHING "Build all optional targets" OFF)
 option(DNP3_STATIC_LIBS "Build static libraries instead of shared libraries" ${DNP3_STATIC_LIBS_BY_DEFAULT})
+option(DNP3_ASIO "Enable asio instead of boost::asio" ON)
 
 if(DNP3_EVERYTHING)
     set(DNP3_TLS ON)
