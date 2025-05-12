@@ -22,61 +22,63 @@
 #define OPENDNP3_MEASUREMENTCONFIG_H
 
 #include "opendnp3/app/MeasurementInfo.h"
+#include "opendnp3/app/MeasurementTypes.h"
 #include "opendnp3/gen/PointClass.h"
 
 namespace opendnp3
 {
 
 // All entries have this information
-template<class Info> struct StaticConfig
+template<class Info, class MeasurementType> struct StaticConfig
 {
     typename Info::static_variation_t svariation = Info::DefaultStaticVariation;
+    MeasurementType defaultValue;
 };
 
-template<class Info> struct EventConfig : StaticConfig<Info>
+template<class Info, class MeasurementType> struct EventConfig : StaticConfig<Info, MeasurementType>
 {
     PointClass clazz = PointClass::Class1;
     typename Info::event_variation_t evariation = Info::DefaultEventVariation;
 };
 
-template<class Info> struct DeadbandConfig : EventConfig<Info>
+template<class Info, class MeasurementType> struct DeadbandConfig : EventConfig<Info, MeasurementType>
 {
     typename Info::value_t deadband = 0;
 };
 
-struct BinaryConfig : public EventConfig<BinaryInfo>
+struct BinaryConfig : public EventConfig<BinaryInfo, Binary>
 {
 };
 
-struct DoubleBitBinaryConfig : public EventConfig<DoubleBitBinaryInfo>
+struct DoubleBitBinaryConfig : public EventConfig<DoubleBitBinaryInfo, DoubleBitBinary>
 {
 };
 
-struct AnalogConfig : public DeadbandConfig<AnalogInfo>
+struct AnalogConfig : public DeadbandConfig<AnalogInfo, Analog>
 {
 };
 
-struct CounterConfig : public DeadbandConfig<CounterInfo>
+struct CounterConfig : public DeadbandConfig<CounterInfo, Counter>
 {
 };
 
-struct FrozenCounterConfig : public DeadbandConfig<FrozenCounterInfo>
+struct FrozenCounterConfig : public DeadbandConfig<FrozenCounterInfo, FrozenCounter>
 {
 };
 
-struct BOStatusConfig : public EventConfig<BinaryOutputStatusInfo>
+struct BOStatusConfig : public EventConfig<BinaryOutputStatusInfo, BinaryOutputStatus>
 {
 };
 
-struct AOStatusConfig : public DeadbandConfig<AnalogOutputStatusInfo>
+struct AOStatusConfig : public DeadbandConfig<AnalogOutputStatusInfo, AnalogOutputStatus>
 {
 };
 
-struct OctetStringConfig : public EventConfig<OctetStringInfo>
+struct OctetStringConfig : public EventConfig<OctetStringInfo, OctetString>
 {
 };
 
-struct TimeAndIntervalConfig : public StaticConfig<TimeAndIntervalInfo>
+struct TimeAndIntervalConfig : public StaticConfig<TimeAndIntervalInfo, TimeAndInterval>
 {
 };
 

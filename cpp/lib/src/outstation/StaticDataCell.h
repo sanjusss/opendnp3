@@ -55,7 +55,7 @@ template<class Spec> struct StaticDataCell
         : value(value), config(config)
     {
     }
-    StaticDataCell(const typename Spec::config_t& config) : config(config) {}
+    StaticDataCell(const typename Spec::config_t& config) : value(config.defaultValue), config(config) {}
 };
 
 } // namespace opendnp3
