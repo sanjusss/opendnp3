@@ -59,10 +59,11 @@ public:
      *	@param onThreadStart Action to run when a thread pool thread starts
      *	@param onThreadExit Action to run just before a thread pool thread exits
      */
-    DNP3Manager(uint32_t concurrencyHint,
-                std::shared_ptr<opendnp3::ILogHandler> handler = std::shared_ptr<opendnp3::ILogHandler>(),
-                std::function<void(uint32_t)> onThreadStart = [](uint32_t) {},
-                std::function<void(uint32_t)> onThreadExit = [](uint32_t) {});
+    DNP3Manager(
+        uint32_t concurrencyHint,
+        std::shared_ptr<opendnp3::ILogHandler> handler = std::shared_ptr<opendnp3::ILogHandler>(),
+        std::function<void(uint32_t)> onThreadStart = [](uint32_t) {},
+        std::function<void(uint32_t)> onThreadExit = [](uint32_t) {});
 
     ~DNP3Manager();
 
@@ -187,6 +188,26 @@ public:
                                            const IPEndpoint& endpoint,
                                            const TLSConfig& config,
                                            std::shared_ptr<IChannelListener> listener);
+    /**
+     * Add a shared tcp/TLS server channel
+     *
+     * @throw std::system_error Throws underlying ASIO exception of TLS configuration is invalid
+     *
+     * @param id Alias that will be used for logging purposes with this channel
+     * @param levels Bitfield that describes the logging level for this channel and associated sessions
+     * @param mode Describes how new connections are treated when another session already exists
+     * @param endpoint Network adapter to listen on (i.e. 127.0.0.1 or 0.0.0.0) and port
+     * @param listener optional callback interface (can be nullptr) for info about the running channel
+     * @param config TLS configuration information, or nullptr if TLS is not desired.
+     * @throw DNP3Error if the manager was already shutdown, if the library was compiled without TLS support
+     *                  or if the server could not be binded properly
+     * @return shared_ptr to a channel interface
+     */
+    std::shared_ptr<IChannel> AddSharedTcpServer(const std::string& id,
+                                                 const opendnp3::LogLevels& levels,
+                                                 const IPEndpoint& endpoint,
+                                                 std::shared_ptr<IChannelListener> listener,
+                                                 TLSConfig* config);
 
     /**
      * Create a TCP listener that will be used to accept incoming connections

@@ -127,6 +127,7 @@ if(DNP3_EXAMPLES)
     add_subdirectory(./cpp/examples/master-gprs)
     add_subdirectory(./cpp/examples/master-udp)
     add_subdirectory(./cpp/examples/outstation)
+    add_subdirectory(./cpp/examples/outstation-shared)
     add_subdirectory(./cpp/examples/outstation-udp)
 
     if(DNP3_TLS)

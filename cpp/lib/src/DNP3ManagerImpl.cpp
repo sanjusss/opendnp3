@@ -30,6 +30,8 @@
 
 #include "channel/DNP3Channel.h"
 #include "channel/SerialIOHandler.h"
+#include "channel/SharedTcpServer.h"
+#include "channel/SharedTcpServerChannel.h"
 #include "channel/TCPClientIOHandler.h"
 #include "channel/TCPServerIOHandler.h"
 #include "channel/UDPClientIOHandler.h"
@@ -228,6 +230,60 @@ std::shared_ptr<IChannel> DNP3ManagerImpl::AddTLSServer(const std::string& id,
 #else
     throw DNP3Error(Error::NO_TLS_SUPPORT);
 #endif
+}
+
+std::shared_ptr<IChannel> DNP3ManagerImpl::AddSharedTcpServer(const std::string& id,
+                                                              const opendnp3::LogLevels& levels,
+                                                              const IPEndpoint& endpoint,
+                                                              std::shared_ptr<IChannelListener> listener,
+                                                              TLSConfig* config)
+{
+    auto clogger = this->logger.detach(id, levels);
+    auto executor = exe4cpp::StrandExecutor::create(this->io);
+    auto crateServer = [&, this]() -> std::shared_ptr<SharedTcpServer> {
+        ASIO_ERROR ec;
+        std::shared_ptr<SharedTcpServer> server;
+        if (config)
+        {
+#ifdef OPENDNP3_USE_TLS
+            server = std::make_shared<SharedTcpServer>(clogger, executor, endpoint, *config, this->resources, ec);
+#else
+            throw DNP3Error(Error::NO_TLS_SUPPORT);
+#endif
+        }
+        else
+        {
+            server = std::make_shared<SharedTcpServer>(clogger, executor, endpoint, this->resources, ec);
+        }
+
+        if (ec)
+        {
+            throw DNP3Error(Error::UNABLE_TO_BIND_SERVER, ec);
+        }
+
+        return server;
+    };
+
+    auto server = this->resources->Bind<SharedTcpServer>(crateServer);
+    if (!server)
+    {
+        throw DNP3Error(Error::SHUTTING_DOWN);
+    }
+
+    auto createChannel = [&, this]() -> std::shared_ptr<IChannel> {
+        auto channel = std::make_shared<SharedTcpServerChannel>(clogger, executor, this->resources, server);
+        server->SetCallback(channel);
+        return channel;
+    };
+
+    auto channel = this->resources->Bind<IChannel>(createChannel);
+
+    if (!channel)
+    {
+        throw DNP3Error(Error::SHUTTING_DOWN);
+    }
+
+    return channel;
 }
 
 std::shared_ptr<IListener> DNP3ManagerImpl::CreateListener(std::string loggerid,

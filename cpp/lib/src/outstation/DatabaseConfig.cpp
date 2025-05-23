@@ -44,4 +44,31 @@ DatabaseConfig::DatabaseConfig(uint16_t all_types)
     initialize(this->octet_string, all_types);
 };
 
+DatabaseConfig::DatabaseConfig(const DatabaseConfig& database)
+{
+    // use other to init all members.
+    this->analog_input = database.analog_input;
+    this->analog_output_status = database.analog_output_status;
+    this->binary_input = database.binary_input;
+    this->binary_output_status = database.binary_output_status;
+    this->counter = database.counter;
+    this->double_binary = database.double_binary;
+    this->frozen_counter = database.frozen_counter;
+    this->octet_string = database.octet_string;
+    this->time_and_interval = database.time_and_interval;
+};
+DatabaseConfig& DatabaseConfig::operator=(const DatabaseConfig& database)
+{
+    // use other to init all members.
+    this->analog_input = database.analog_input;
+    this->analog_output_status = database.analog_output_status;
+    this->binary_input = database.binary_input;
+    this->binary_output_status = database.binary_output_status;
+    this->counter = database.counter;
+    this->double_binary = database.double_binary;
+    this->frozen_counter = database.frozen_counter;
+    this->octet_string = database.octet_string;
+    this->time_and_interval = database.time_and_interval;
+    return *this;
+}
 } // namespace opendnp3

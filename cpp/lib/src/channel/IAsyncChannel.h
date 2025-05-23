@@ -47,6 +47,11 @@ public:
         this->callbacks = callbacks;
     }
 
+    void SetOnShotdownCallback(const std::function<void()>& callback)
+    {
+        this->on_shutdown = callback;
+    }
+
     inline bool BeginRead(const ser4cpp::wseq_t& buffer)
     {
         assert(callbacks);
@@ -137,10 +142,15 @@ private:
         else
         {
             self->callbacks.reset(); // drop the callbacks
+            if (on_shutdown)
+            {
+                self->executor->post(on_shutdown);
+            }
         }
     }
 
     std::shared_ptr<IChannelCallbacks> callbacks;
+    std::function<void()> on_shutdown;
 
     bool is_shutting_down = false;
     bool reading = false;

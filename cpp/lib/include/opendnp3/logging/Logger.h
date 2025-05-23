@@ -98,6 +98,11 @@ public:
         this->settings->id = id;
     }
 
+    std::string get_id() const
+    {
+        return this->settings->id;
+    }
+
 private:
     Logger(const std::shared_ptr<ILogHandler>& backend, const std::shared_ptr<Settings>& settings)
         : backend(backend), settings(settings)

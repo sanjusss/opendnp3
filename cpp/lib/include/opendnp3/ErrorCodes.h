@@ -32,7 +32,8 @@ enum class Error : int
 {
     SHUTTING_DOWN,
     NO_TLS_SUPPORT,
-    UNABLE_TO_BIND_SERVER
+    UNABLE_TO_BIND_SERVER,
+    NO_MASTER_SUPPORT,
 };
 
 struct ErrorSpec
@@ -47,6 +48,8 @@ struct ErrorSpec
             return "Not built with TLS support";
         case Error::UNABLE_TO_BIND_SERVER:
             return "Unable to bind server to the specified port";
+        case Error::NO_MASTER_SUPPORT:
+            return "Not built with master support";
         default:
             return "unknown error";
         };

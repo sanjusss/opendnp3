@@ -82,6 +82,21 @@ struct StackStatistics
 
     StackStatistics(const Link& link, const Transport& transport) : link(link), transport(transport) {}
 
+    inline void Merge(const StackStatistics& other) {
+        this->link.numUnexpectedFrame += other.link.numUnexpectedFrame;
+        this->link.numBadMasterBit += other.link.numBadMasterBit;
+        this->link.numUnknownDestination += other.link.numUnknownDestination;
+        this->link.numUnknownSource += other.link.numUnknownSource;
+
+        this->transport.rx.numTransportRx += other.transport.rx.numTransportRx;
+        this->transport.rx.numTransportErrorRx += other.transport.rx.numTransportErrorRx;
+        this->transport.rx.numTransportBufferOverflow += other.transport.rx.numTransportBufferOverflow;
+        this->transport.rx.numTransportDiscard += other.transport.rx.numTransportDiscard;
+        this->transport.rx.numTransportIgnore += other.transport.rx.numTransportIgnore;
+
+        this->transport.tx.numTransportTx += other.transport.tx.numTransportTx;
+    }
+
     Link link;
     Transport transport;
 };

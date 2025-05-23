@@ -32,6 +32,17 @@ struct LinkStatistics
 {
     struct Parser
     {
+        void Merge(const Parser& other)
+        {
+            this->numHeaderCrcError += other.numHeaderCrcError;
+            this->numBodyCrcError += other.numBodyCrcError;
+            this->numLinkFrameRx += other.numLinkFrameRx;
+            this->numBadLength += other.numBadLength;
+            this->numBadFunctionCode += other.numBadFunctionCode;
+            this->numBadFCV += other.numBadFCV;
+            this->numBadFCB += other.numBadFCB;
+        }
+
         /// Number of frames discarded due to header CRC errors
         size_t numHeaderCrcError = 0;
 
@@ -56,6 +67,16 @@ struct LinkStatistics
 
     struct Channel
     {
+        void Merge(const Channel& other)
+        {
+            this->numOpen += other.numOpen;
+            this->numOpenFail += other.numOpenFail;
+            this->numClose += other.numClose;
+            this->numBytesRx += other.numBytesRx;
+            this->numBytesTx += other.numBytesTx;
+            this->numLinkFrameTx += other.numLinkFrameTx;
+        }
+
         /// The number of times the channel has successfully opened
         size_t numOpen = 0;
 
@@ -78,6 +99,12 @@ struct LinkStatistics
     LinkStatistics() = default;
 
     LinkStatistics(const Channel& channel, const Parser& parser) : channel(channel), parser(parser) {}
+
+    void Merge(const LinkStatistics& other)
+    {
+        this->channel.Merge(other.channel);
+        this->parser.Merge(other.parser);
+    }
 
     /// statistics for the communicaiton channel
     Channel channel;

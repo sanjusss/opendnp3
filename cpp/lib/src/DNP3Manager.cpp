@@ -100,6 +100,15 @@ std::shared_ptr<IChannel> DNP3Manager::AddTLSServer(const std::string& id,
     return this->impl->AddTLSServer(id, levels, mode, endpoint, config, std::move(listener));
 }
 
+std::shared_ptr<IChannel> DNP3Manager::AddSharedTcpServer(const std::string& id,
+                                                          const opendnp3::LogLevels& levels,
+                                                          const IPEndpoint& endpoint,
+                                                          std::shared_ptr<IChannelListener> listener,
+                                                          TLSConfig* config)
+{
+    return this->impl->AddSharedTcpServer(id, levels, endpoint, std::move(listener), config);
+}
+
 std::shared_ptr<IListener> DNP3Manager::CreateListener(std::string loggerid,
                                                        const LogLevels& loglevel,
                                                        const IPEndpoint& endpoint,

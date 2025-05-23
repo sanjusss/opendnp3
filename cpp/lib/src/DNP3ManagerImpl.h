@@ -94,6 +94,12 @@ public:
                                            const TLSConfig& config,
                                            std::shared_ptr<IChannelListener> listener);
 
+    std::shared_ptr<IChannel> AddSharedTcpServer(const std::string& id,
+                                                 const opendnp3::LogLevels& levels,
+                                                 const IPEndpoint& endpoint,
+                                                 std::shared_ptr<IChannelListener> listener,
+                                                 TLSConfig* config);
+
     std::shared_ptr<IListener> CreateListener(std::string loggerid,
                                               const opendnp3::LogLevels& levels,
                                               const IPEndpoint& endpoint,
