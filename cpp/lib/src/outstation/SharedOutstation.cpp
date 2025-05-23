@@ -177,6 +177,7 @@ void SharedOutstation::OnDisconnect(std::shared_ptr<IOHandler> iohandler, const 
 
     auto out = i->second;
     this->outstations.erase(i);
+    out->Disable();
     out->Shutdown();
     FORMAT_LOG_BLOCK(this->logger, flags::WARN, "Release outstation for %s.", remoteAddr.c_str());
 }

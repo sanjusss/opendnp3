@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
         // in this example we've changed the default link layer addressing
         config.link.LocalAddr = 1024;
         config.link.RemoteAddr = 1;
-        config.link.KeepAliveTimeout = TimeDuration::Max();
+        config.link.KeepAliveTimeout = TimeDuration::Seconds(10);
 
         // Create a new outstation with a log level, command handler, and
         // config info this	returns a thread-safe interface used for

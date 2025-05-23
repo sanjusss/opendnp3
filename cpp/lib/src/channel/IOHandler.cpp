@@ -312,13 +312,13 @@ void IOHandler::Reset()
 
         ++this->statistics.numClose;
 
-        this->UpdateListener(ChannelState::CLOSED);
-
         // notify any sessions that are online that this layer is offline
         for (auto& item : this->sessions)
         {
             item.LowerLayerDown();
         }
+
+        this->UpdateListener(ChannelState::CLOSED);
     }
 
     // reset the state of the parser

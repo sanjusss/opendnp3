@@ -272,8 +272,9 @@ void LinkContext::RestartKeepAliveTimer()
     this->lastMessageTimestamp = Timestamp(this->executor->get_time());
     const auto expiration = this->lastMessageTimestamp + this->config.KeepAliveTimeout;
 
-    this->keepAliveTimer = executor->start(expiration.value, [self = shared_from_this()]() {
-        if (self->isOnline)
+    this->keepAliveTimer = executor->start(expiration.value, [holder = weak_from_this()]() {
+        auto self = holder.lock();
+        if (self && self->isOnline)
         {
             self->OnKeepAliveTimeout();
         }
