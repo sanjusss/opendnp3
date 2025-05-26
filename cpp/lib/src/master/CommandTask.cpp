@@ -61,6 +61,21 @@ std::shared_ptr<IMasterTask> CommandTask::CreateSelectAndOperate(const std::shar
     return task;
 }
 
+std::shared_ptr<IMasterTask> CommandTask::CreateSelect(const std::shared_ptr<TaskContext>& context,
+                                                       CommandSet&& set,
+                                                       IndexQualifierMode mode,
+                                                       IMasterApplication& app,
+                                                       const CommandResultCallbackT& callback,
+                                                       const Timestamp& startExpiration,
+                                                       const TaskConfig& config,
+                                                       Logger logger)
+{
+    auto task
+        = std::make_shared<CommandTask>(context, std::move(set), mode, app, callback, startExpiration, config, logger);
+    task->LoadSelect();
+    return task;
+}
+
 CommandTask::CommandTask(const std::shared_ptr<TaskContext>& context,
                          CommandSet&& commands,
                          IndexQualifierMode mode,
@@ -75,6 +90,12 @@ CommandTask::CommandTask(const std::shared_ptr<TaskContext>& context,
       commands(std::move(commands)),
       mode(mode)
 {
+}
+
+void CommandTask::LoadSelect()
+{
+    functionCodes.clear();
+    functionCodes.push_back(FunctionCode::SELECT);
 }
 
 void CommandTask::LoadSelectAndOperate()

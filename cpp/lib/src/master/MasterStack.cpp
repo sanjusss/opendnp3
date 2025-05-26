@@ -42,13 +42,13 @@ MasterStack::MasterStack(const Logger& logger,
                 config.master.maxRxFragSize,
                 LinkLayerConfig(config.link, false)),
       mcontext(MContext::Create(Addresses(config.link.LocalAddr, config.link.RemoteAddr),
-               logger,
-               executor,
-               tstack.transport,
-               SOEHandler,
-               application,
-               scheduler,
-               config.master))
+                                logger,
+                                executor,
+                                tstack.transport,
+                                SOEHandler,
+                                application,
+                                scheduler,
+                                config.master))
 {
     tstack.transport->SetAppLayer(*mcontext);
 }
@@ -211,6 +211,18 @@ void MasterStack::SelectAndOperate(CommandSet&& commands,
 
     auto action = [self = this->shared_from_this(), set, config, callback]() {
         self->mcontext->SelectAndOperate(std::move(*set), callback, config);
+    };
+
+    this->executor->post(action);
+}
+
+void MasterStack::Select(CommandSet&& commands, const CommandResultCallbackT& callback, const TaskConfig& config)
+{
+    /// this is to work around the fact that c++11 doesn't have generic move capture
+    auto set = std::make_shared<CommandSet>(std::move(commands));
+
+    auto action = [self = this->shared_from_this(), set, config, callback]() {
+        self->mcontext->Select(std::move(*set), callback, config);
     };
 
     this->executor->post(action);

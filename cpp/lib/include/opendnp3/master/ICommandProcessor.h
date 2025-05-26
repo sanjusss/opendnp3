@@ -46,6 +46,18 @@ public:
         = 0;
 
     /**
+     * Select a set of commands
+     *
+     * @param commands Set of command headers
+     * @param callback callback that will be invoked upon completion or failure
+     * @param config optional configuration that controls normal callbacks and allows the user to be specified for SA
+     */
+    virtual void Select(CommandSet&& commands,
+                        const CommandResultCallbackT& callback,
+                        const TaskConfig& config = TaskConfig::Default())
+        = 0;
+
+    /**
      * Direct operate a set of commands
      *
      * @param commands Set of command headers

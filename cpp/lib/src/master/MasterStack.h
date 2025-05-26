@@ -160,6 +160,7 @@ public:
     void SelectAndOperate(CommandSet&& commands,
                           const CommandResultCallbackT& callback,
                           const TaskConfig& config) override;
+    void Select(CommandSet&& commands, const CommandResultCallbackT& callback, const TaskConfig& config) override;
 
     void DirectOperate(CommandSet&& commands,
                        const CommandResultCallbackT& callback,

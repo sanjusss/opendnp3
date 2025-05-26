@@ -53,13 +53,13 @@ MasterSessionStack::MasterSessionStack(const Logger& logger,
       session(std::move(session)),
       stack(logger, executor, application, config.master.maxRxFragSize, LinkLayerConfig(config.link, false)),
       context(MContext::Create(Addresses(config.link.LocalAddr, config.link.RemoteAddr),
-              logger,
-              executor,
-              stack.transport,
-              SOEHandler,
-              application,
-              scheduler,
-              config.master))
+                               logger,
+                               executor,
+                               stack.transport,
+                               SOEHandler,
+                               application,
+                               scheduler,
+                               config.master))
 {
     stack.link->SetRouter(linktx);
     stack.transport->SetAppLayer(*context);
@@ -245,6 +245,17 @@ void MasterSessionStack::SelectAndOperate(CommandSet&& commands,
 
     auto action = [self = shared_from_this(), set, config, callback]() -> void {
         self->context->SelectAndOperate(std::move(*set), callback, config);
+    };
+    executor->post(action);
+}
+
+void MasterSessionStack::Select(CommandSet&& commands, const CommandResultCallbackT& callback, const TaskConfig& config)
+{
+    // this is required b/c move capture not supported in C++11
+    auto set = std::make_shared<CommandSet>(std::move(commands));
+
+    auto action = [self = shared_from_this(), set, config, callback]() -> void {
+        self->context->Select(std::move(*set), callback, config);
     };
     executor->post(action);
 }

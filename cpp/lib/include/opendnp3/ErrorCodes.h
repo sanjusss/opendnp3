@@ -34,6 +34,7 @@ enum class Error : int
     NO_TLS_SUPPORT,
     UNABLE_TO_BIND_SERVER,
     NO_MASTER_SUPPORT,
+    NO_IMPLEMENT,
 };
 
 struct ErrorSpec
@@ -50,6 +51,8 @@ struct ErrorSpec
             return "Unable to bind server to the specified port";
         case Error::NO_MASTER_SUPPORT:
             return "Not built with master support";
+        case Error::NO_IMPLEMENT:
+            return "Not implement";
         default:
             return "unknown error";
         };

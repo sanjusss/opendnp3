@@ -59,17 +59,17 @@ MContext::MContext(const Addresses& addresses,
 {
 }
 
-std::shared_ptr<MContext> MContext::Create(
-    const Addresses& addresses,
-    const Logger& logger,
-    const std::shared_ptr<exe4cpp::IExecutor>& executor,
-    std::shared_ptr<ILowerLayer> lower,
-    const std::shared_ptr<ISOEHandler>& SOEHandler,
-    const std::shared_ptr<IMasterApplication>& application,
-    std::shared_ptr<IMasterScheduler> scheduler,
-    const MasterParams& params)
+std::shared_ptr<MContext> MContext::Create(const Addresses& addresses,
+                                           const Logger& logger,
+                                           const std::shared_ptr<exe4cpp::IExecutor>& executor,
+                                           std::shared_ptr<ILowerLayer> lower,
+                                           const std::shared_ptr<ISOEHandler>& SOEHandler,
+                                           const std::shared_ptr<IMasterApplication>& application,
+                                           std::shared_ptr<IMasterScheduler> scheduler,
+                                           const MasterParams& params)
 {
-    return std::shared_ptr<MContext>(new MContext(addresses, logger, executor, lower, SOEHandler, application, scheduler, params));
+    return std::shared_ptr<MContext>(
+        new MContext(addresses, logger, executor, lower, SOEHandler, application, scheduler, params));
 }
 
 bool MContext::OnLowerLayerUp()
@@ -196,6 +196,14 @@ void MContext::SelectAndOperate(CommandSet&& commands, const CommandResultCallba
     this->ScheduleAdhocTask(CommandTask::CreateSelectAndOperate(this->tasks.context, std::move(commands),
                                                                 this->params.controlQualifierMode, *application,
                                                                 callback, timeout, config, logger));
+}
+
+void MContext::Select(CommandSet&& commands, const CommandResultCallbackT& callback, const TaskConfig& config)
+{
+    const auto timeout = Timestamp(this->executor->get_time()) + params.taskStartTimeout;
+    this->ScheduleAdhocTask(CommandTask::CreateSelect(this->tasks.context, std::move(commands),
+                                                      this->params.controlQualifierMode, *application, callback,
+                                                      timeout, config, logger));
 }
 
 void MContext::ProcessAPDU(const APDUResponseHeader& header, const ser4cpp::rseq_t& objects)

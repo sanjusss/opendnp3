@@ -110,6 +110,7 @@ public:
     void SelectAndOperate(CommandSet&& commands,
                           const CommandResultCallbackT& callback,
                           const TaskConfig& config) final;
+    void Select(CommandSet&& commands, const CommandResultCallbackT& callback, const TaskConfig& config) final;
     void DirectOperate(CommandSet&& commands, const CommandResultCallbackT& callback, const TaskConfig& config) final;
 
     MasterSessionStack(const Logger& logger,
