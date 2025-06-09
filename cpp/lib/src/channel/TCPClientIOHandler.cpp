@@ -76,6 +76,7 @@ bool TCPClientIOHandler::StartConnect(const TimeDuration& delay)
         return false;
     }
 
+    this->connectTimeoutTimer.cancel();
     auto connectTimeoutCallback = [=, self = shared_from_this(), clientHolder = std::weak_ptr(this->client)]() {
         auto client = clientHolder.lock();
         if (!client || client != this->client) {
