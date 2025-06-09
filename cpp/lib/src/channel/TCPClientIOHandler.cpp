@@ -76,6 +76,18 @@ bool TCPClientIOHandler::StartConnect(const TimeDuration& delay)
         return false;
     }
 
+    auto connectTimeoutCallback = [=, self = shared_from_this()]() {
+        FORMAT_LOG_BLOCK(this->logger, flags::WARN, "Error Connect timeout.");
+        if (this->client)
+        {
+            this->client->Cancel();
+            this->client.reset();
+        }
+
+        this->BeginChannelAccept();
+    };
+    this->connectTimeoutTimer = this->executor->start(retry.connectTimeout.value, connectTimeoutCallback);
+
     auto cb = [=, self = shared_from_this()](const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
                                              ASIO::ip::tcp::socket socket, const ASIO_ERROR& ec) -> void {
         if (ec)
@@ -119,6 +131,7 @@ bool TCPClientIOHandler::StartConnect(const TimeDuration& delay)
 
 void TCPClientIOHandler::ResetState()
 {
+    this->connectTimeoutTimer.cancel();
     if (this->client)
     {
         this->client->Cancel();
@@ -126,8 +139,7 @@ void TCPClientIOHandler::ResetState()
     }
 
     this->remotes.Reset();
-
-    retrytimer.cancel();
+    this->retrytimer.cancel();
 }
 
 } // namespace opendnp3

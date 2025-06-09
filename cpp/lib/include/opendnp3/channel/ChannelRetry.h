@@ -51,6 +51,8 @@ public:
     TimeDuration maxOpenRetry;
     /// reconnect delay (defaults to zero)
     TimeDuration reconnectDelay;
+    /// connection timeout (defaults to 10 seconds)
+    TimeDuration connectTimeout;
 
     TimeDuration NextDelay(const TimeDuration& current) const
     {

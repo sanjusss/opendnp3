@@ -27,7 +27,11 @@ ChannelRetry::ChannelRetry(TimeDuration minOpenRetry_,
                            TimeDuration maxOpenRetry_,
                            TimeDuration reconnectDelay_,
                            IOpenDelayStrategy& strategy_)
-    : minOpenRetry(minOpenRetry_), maxOpenRetry(maxOpenRetry_), reconnectDelay(reconnectDelay_), strategy(strategy_)
+    : minOpenRetry(minOpenRetry_),
+      maxOpenRetry(maxOpenRetry_),
+      reconnectDelay(reconnectDelay_),
+      strategy(strategy_),
+      connectTimeout(TimeDuration::Seconds(10))
 {
 }
 

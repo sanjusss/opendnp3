@@ -88,9 +88,22 @@ void TLSClientIOHandler::StartConnect(const TimeDuration& delay)
     if (!this->client)
         return;
 
+    this->connectTimeoutTimer.cancel();
+    auto connectTimeoutCallback = [=, self = shared_from_this()]() {
+        FORMAT_LOG_BLOCK(this->logger, flags::WARN, "Error Connect timeout.");
+        if (this->client)
+        {
+            this->client->Cancel();
+            this->client.reset();
+        }
+
+        this->BeginChannelAccept();
+    };
+    this->connectTimeoutTimer = this->executor->start(retry.connectTimeout.value, connectTimeoutCallback);
     auto cb = [=, self = shared_from_this()](const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
                                              const std::shared_ptr<ASIO::ssl::stream<ASIO::ip::tcp::socket>>& stream,
                                              const ASIO_ERROR& ec) -> void {
+        connectTimeoutTimer.cancel();
         if (ec)
         {
             FORMAT_LOG_BLOCK(this->logger, flags::WARN, "Error Connecting: %s", ec.message().c_str());
@@ -124,6 +137,7 @@ void TLSClientIOHandler::StartConnect(const TimeDuration& delay)
 
 void TLSClientIOHandler::ResetState()
 {
+    this->connectTimeoutTimer.cancel();
     if (this->client)
     {
         this->client->Cancel();
@@ -132,7 +146,7 @@ void TLSClientIOHandler::ResetState()
 
     this->remotes.Reset();
 
-    retrytimer.cancel();
+    this->retrytimer.cancel();
 }
 
 } // namespace opendnp3

@@ -74,6 +74,8 @@ private:
 
     // connection retry timer
     exe4cpp::Timer retrytimer;
+    // connect timeout timer
+    exe4cpp::Timer connectTimeoutTimer;
 };
 
 } // namespace opendnp3
