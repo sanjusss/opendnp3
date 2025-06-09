@@ -89,19 +89,15 @@ void TLSClientIOHandler::StartConnect(const TimeDuration& delay)
         return;
 
     this->connectTimeoutTimer.cancel();
-    auto connectTimeoutCallback = [=, self = shared_from_this()]() {
-        if (this->connectTimeoutTimer.cancel() == false)
-        {
+    auto connectTimeoutCallback = [=, self = shared_from_this(), clientHolder = std::weak_ptr(this->client)]() {
+        auto client = clientHolder.lock();
+        if (!client || client != this->client) {
             return;
         }
 
         FORMAT_LOG_BLOCK(this->logger, flags::WARN, "Error Connect timeout.");
-        if (this->client)
-        {
-            this->client->Cancel();
-            this->client.reset();
-        }
-
+        this->client->Cancel();
+        this->client.reset();
         this->remotes.Next();
         this->BeginChannelAccept();
     };
@@ -143,8 +139,6 @@ void TLSClientIOHandler::StartConnect(const TimeDuration& delay)
 
 void TLSClientIOHandler::ResetState()
 {
-    this->connectTimeoutTimer.cancel();
-    this->connectTimeoutTimer = {};
     if (this->client)
     {
         this->client->Cancel();
@@ -152,8 +146,8 @@ void TLSClientIOHandler::ResetState()
     }
 
     this->remotes.Reset();
-
     this->retrytimer.cancel();
+    this->connectTimeoutTimer.cancel();
 }
 
 } // namespace opendnp3
