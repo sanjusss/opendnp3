@@ -79,7 +79,8 @@ bool TCPClientIOHandler::StartConnect(const TimeDuration& delay)
     this->connectTimeoutTimer.cancel();
     auto connectTimeoutCallback = [=, self = shared_from_this(), clientHolder = std::weak_ptr(this->client)]() {
         auto client = clientHolder.lock();
-        if (!client || client != this->client) {
+        if (!client || client != this->client)
+        {
             return;
         }
 
@@ -93,6 +94,7 @@ bool TCPClientIOHandler::StartConnect(const TimeDuration& delay)
 
     auto cb = [=, self = shared_from_this()](const std::shared_ptr<exe4cpp::StrandExecutor>& executor,
                                              ASIO::ip::tcp::socket socket, const ASIO_ERROR& ec) -> void {
+        this->connectTimeoutTimer.cancel();
         if (ec)
         {
             FORMAT_LOG_BLOCK(this->logger, flags::WARN, "Error Connecting: %s", ec.message().c_str());
